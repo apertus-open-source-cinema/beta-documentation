@@ -1,0 +1,47 @@
+\section{Operating Basics}
+
+\subsection{Prepare your AXIOM Beta for use}
+
+Use a micro-USB cable to connect the camera's MicroZed development board (USB UART) to a computer. The MicroZed board is the backmost, red PCB. (There is another micro-USB socket on the Power Board, but that is the JTAG Interface.)\\
+
+1. Connect the ethernet port on the MicroZed to an ethernet port on your computer. You might have to use an ethernet adapter on newer, smaller machines which come without a native ethernet port.\\ 
+
+2. Connect the AC adapter to the camera's Power Board. (The power cord plugs into an adapter that connects to the Power Board; to power the camera off at a later point, you need not disconnect the adapter from the board but can just unplug the cord from the adapter.)
+
+
+\subsection{Prepare your computer for use with AXIOM Beta}
+
+\textbf{Overview -} To communicate with your AXIOM Beta camera, you will send it instructions via your computer's command line.\\
+
+In case you have not worked with a shell (console, terminal) much or ever before, we have prepared detailed instructions to help you get you set up. The steps which need to 	be taken to prepare your machine sometimes differ between operating systems, so pick the ones that are applicable to you(r system). \\
+
+Note that dollar signs placed in front of commands are not meant to be typed in but denote 	the command line prompt (a signal indicating the computer is ready for user input). It is used in documentation to differentiate between commands and output resulting from commands. The prompt might look different on your machine (e.g. an angled bracket >) and be preceded by your user name, computer name or the name of the directory which you are currently inside.
+
+
+
+\subsubsection{USB to UART Drivers}
+
+For the USB connection to work, you will need drivers for bridging USB to UART (USB to serial). (Under Linux this works out of the box in most 	distributions) for other operating systems they can be 
+
+\hyperlink{https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers}{downloaded}
+downloaded from e.g. Silicon Labs' website – pick the software provided for your OS and install it. \\
+
+\subsubsection{Serial Console}
+\paragraph{Linux Setup}
+\paragraph{MAC OSX Setup}
+\paragraph{Minicom Configuration}
+\subsubsection{Serial connection (via USB)}
+\paragraph{Connect using Minicom}
+\paragraph{Connect using Screen}
+\paragraph{Disconnect}
+\subsubsection{Ethernet connection (using SSH)}
+\paragraph{SSH Keys how-to for Linux and Mac}
+\subparagraph{Storage location/Find existing keys}
+\subparagraph{SSH key creation}
+\paragraph{Get or set IP address}
+\paragraph{IP address check}
+\paragraph{Set IP address}
+\paragraph{Establish a connection via key}
+\paragraph{Password-based authentication}
+\subsubsection{Start the camera}
+\subsubsection{WiFi access point setup}
