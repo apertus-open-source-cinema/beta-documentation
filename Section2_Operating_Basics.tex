@@ -2,12 +2,20 @@
 
 \subsection{Prepare your AXIOM Beta for use}
 
-Use a micro-USB cable to connect the camera's MicroZed development board (USB UART) to a computer. The MicroZed board is the backmost, red PCB. (There is another micro-USB socket on the Power Board, but that is the JTAG Interface.)\\
+\begin{center}
+\includegraphics[height=11cm]{images/Getting_Started}\\
+\end{center}
 
-1. Connect the ethernet port on the MicroZed to an ethernet port on your computer. You might have to use an ethernet adapter on newer, smaller machines which come without a native ethernet port.\\ 
+1. Use a micro-USB cable to connect the camera's MicroZed development board (USB UART) to a computer. The MicroZed board is the backmost, red PCB. (There is another micro-USB socket on the Power Board, but that is the JTAG Interface.)\\
 
-2. Connect the AC adapter to the camera's Power Board. (The power cord plugs into an adapter that connects to the Power Board; to power the camera off at a later point, you need not disconnect the adapter from the board but can just unplug the cord from the adapter.)
+2. Connect the ethernet port on the MicroZed to an ethernet port on your computer. You might have to use an ethernet adapter on newer, smaller machines which come without a native ethernet port.\\ 
 
+3. Connect the AC adapter to the camera's Power Board. (The power cord plugs into an adapter that connects to the Power Board; to power the camera off at a later point, you need not disconnect the adapter from the board but can just unplug the cord from the adapter.)
+
+
+\begin{center}
+\includegraphics[height=17cm]{images/BetaGuide}\\
+\end{center}
 
 \subsection{Prepare your computer for use with AXIOM Beta}
 
@@ -15,19 +23,32 @@ Use a micro-USB cable to connect the camera's MicroZed development board (USB UA
 
 In case you have not worked with a shell (console, terminal) much or ever before, we have prepared detailed instructions to help you get you set up. The steps which need to 	be taken to prepare your machine sometimes differ between operating systems, so pick the ones that are applicable to you(r system). \\
 
-Note that dollar signs placed in front of commands are not meant to be typed in but denote 	the command line prompt (a signal indicating the computer is ready for user input). It is used in documentation to differentiate between commands and output resulting from commands. The prompt might look different on your machine (e.g. an angled bracket >) and be preceded by your user name, computer name or the name of the directory which you are currently inside.
+\textbf{Note:} Dollar signs placed in front of commands are not meant to be typed in but denote the command line prompt (a signal indicating the computer is ready for user input). It is used in documentation to differentiate between commands and output resulting from commands. The prompt might look different on your machine (e.g. an angled bracket >) and be preceded by your user name, computer name or the name of the directory which you are currently inside.
 
 
 
 \subsubsection{USB to UART Drivers}
 
-For the USB connection to work, you will need drivers for bridging USB to UART (USB to serial). (Under Linux this works out of the box in most 	distributions) for other operating systems they can be 
-
-\hyperlink{https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers}{downloaded}
-downloaded from e.g. Silicon Labs' website – pick the software provided for your OS and install it. \\
+For the USB connection to work, you will need drivers for bridging USB to UART (USB to serial). (Under Linux this works out of the box in most 	distributions) for other operating systems they can be \href{https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers}{downloaded} from e.g. Silicon Labs' website – pick the software provided for your OS and install it. \\
 
 \subsubsection{Serial Console}
+
+The tool we recommend for connecting to the AXIOM Beta camera via serial port with Mac OS X or Linux is \href{https://linux.die.net/man/1/minicom}{minicom}; for connections from Windows machines, we have used \href{http://www.putty.org/}{Putty}.
+
 \paragraph{Linux Setup}
+
+Check if you already have minicom installed on your system by trying to run it:
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+$ minicom
+\end{lstlisting}
+
+Your system will respond with a message like bash: command not found: minicom if it's not installed.
+
+
+
+
+
 \paragraph{MAC OSX Setup}
 \paragraph{Minicom Configuration}
 \subsubsection{Serial connection (via USB)}
@@ -40,7 +61,9 @@ With minicom installed and properly configured, all you need to do is run the fo
 $ minicom -8 USB0
 \end{lstlisting}
 
-On successful connection, you will be prompted to enter user credentials (which are needed to log into the camera).
+On successful connection, you will be prompted to enter user credentials (which are needed to log into the camera).\\
+
+Test\\
 
 If your terminal remains blank except for the minicom welcome screen/information about your connection settings, try pressing enter. If this still does not result in the prompt for user credentials – while testing, we discovered the initial connection with minicom does not always work – disconnect the camera from the power adapter, then reconnect it: in your minicom window you should now see the camera's operating system booting up, followed by the login prompt. (From then on, connecting with minicom should work smoothly and at most require you to press enter to make the login prompt appear.)
 
