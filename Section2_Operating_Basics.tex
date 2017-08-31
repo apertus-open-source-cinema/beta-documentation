@@ -43,6 +43,100 @@ Check if you already have minicom installed on your system by trying to run it:
 $ minicom
 \end{lstlisting}
 
+Your system will respond with a message like \importantKeyword{bash: command not found: minicom} if it's not installed.\\
+
+\textbf{Install minicom}\\
+
+Install the minicom package like you'd install other software on your system – which could be via a GUI tool or using \importantKeyword{aptitude} or \importantKeyword{apt-get} (for wich you might need super user rights), e.g.: 
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+$ apt-get install minicom
+\end{lstlisting}
+
+or
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+$ sudo apt-get install minicom
+\end{lstlisting}
+
+\paragraph{MAC OSX Setup}
+
+You will want to have \href{https://brew.sh/}{Homebrew} installed on your system to use \importantKeyword{minicom} for serial communication as it is more convenient than using \importantKeyword{screen}.\\
+
+\textbf{Note:} Homebrew is a package manager for Mac, a piece of software that helps you install other software on your Mac machine, particularly software which is readily available on Linux but which does not come in the form of Mac "applications", which you can download via your web browser and simply drop into your Applications folder.\\ 
+
+Open Terminal.app (or your preferred terminal emulator if you have another installed). Terminal can be found via e.g. Spotlight search or via the Finder menu: \importantKeyword{Go > Utilities > Terminal.app}.\\
+
+Check if you already have brew installed by entering the brew command: 
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+$ brew
+\end{lstlisting}
+
+If you don't have Homebrew installed, your shell will reply with something like \importantKeyword{bash: command not found: brew}. Otherwise, it will spit out a list of \importantKeyword{brew} commands.\\ 
+
+\textbf{Install Homebrew}\\
+
+To install Homebrew, go to the \href{https://brew.sh/}{Homebrew} website and follow the install instructions there. You can simply copy the command used for installing Homebrew from their website and paste it into your terminal.\\
+
+\textbf{Install minicom}\\
+
+With brew installed, you want to install minicom:
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+$ brew install minicom
+\end{lstlisting}
+
+Homebrew will tell you if you already have minicom installed on your system (e.g. \importantKeyword{Warning: minicom-2.7 already installed}), otherwise it will install it for you. 
+
+
+\paragraph{Minicom Configuration}
+\subsubsection{Serial connection (via USB)}
+\paragraph{Connect using Minicom}\mbox{}\\
+Note that you will not be able to use the terminal window you initiate the serial connection in for anything else (it needs to remain open while you access the camera), so it might make sense to open a separate window just for this purpose.
+
+With minicom installed and properly configured, all you need to do is run the following command to start it with the correct settings:
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+$ minicom -8 USB0
+\end{lstlisting}
+
+On successful connection, you will be prompted to enter user credentials (which are needed to log into the camera).\\
+
+Test\\
+
+If your terminal remains blank except for the minicom welcome screen/information about your connection settings, try pressing enter. If this still does not result in the prompt for user credentials – while testing, we discovered the initial connection with minicom does not always work – disconnect the camera from the power adapter, then reconnect it: in your minicom window you should now see the camera's operating system booting up, followed by the login prompt. (From then on, connecting with minicom should work smoothly and at most require you to press enter to make the login prompt appear.)
+
+\paragraph{Connect using Screen}
+\paragraph{Disconnect}
+\subsubsection{Ethernet connection (using SSH)}
+\paragraph{SSH Keys how-to for Linux and Mac}
+\subparagraph{Storage location/Find existing keys}
+\subparagraph{SSH key creation}
+\paragraph{Get or set IP address}
+\paragraph{IP address check}
+\paragraph{Set IP address}
+\paragraph{Establish a connection via key}
+\paragraph{Password-based authentication}
+\subsubsection{Start the camera}
+\subsubsection{WiFi access point setup}
+
+\subsubsection{WiFi access point setup}
+
+
+A neat tool for communicating with your Beta camera via serial port is \importantKeyword{minicom}.
+
+Check if you already have minicom installed on your system by trying to run it:
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+$ minicom
+\end{lstlisting}
+Your system will respond with a message like bash: command not found: minicom if it's not installed.
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+$ minicom
+\end{lstlisting}
+
 Your system will respond with a message like bash: command not found: minicom if it's not installed.
 
 
