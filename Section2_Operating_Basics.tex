@@ -80,3 +80,16 @@ If your terminal remains blank except for the minicom welcome screen/information
 \paragraph{Password-based authentication}
 \subsubsection{Start the camera}
 \subsubsection{WiFi access point setup}
+
+\subsubsection{WiFi access point setup}
+
+\definecolor{keywordBack}{HTML}{FFEDED}
+\newcommand{\importantKeyword}[1]{\colorbox{keywordBack}{\textcolor{BrickRed}{#1}}}
+A neat tool for communicating with your Beta camera via serial port is \importantKeyword{minicom}.
+
+Check if you already have minicom installed on your system by trying to run it:
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+$ minicom
+\end{lstlisting}
+Your system will respond with a message like bash: command not found: minicom if it's not installed.
