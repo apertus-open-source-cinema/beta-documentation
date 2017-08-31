@@ -170,9 +170,9 @@ Once the Beta is connected and powered on (and you installed the necessary drive
 
 or
 
-\importantKeyword{/dev/cu.SLAB_USBtoUART}\\
+\importantKeyword{/dev/cu.SLAB\_USBtoUART}\\
 
-\importantKeyword{/dev/tty.SLAB_USBtoUART} (on Mac).
+\importantKeyword{/dev/tty.SLAB\_USBtoUART} (on Mac).
 
 You can use a command such as: 
 
@@ -184,15 +184,14 @@ $ ls -al /dev | grep -i usb
 
 
 
-\paragraph{Connect using Screen}\\
-
+\paragraph{Connect using Screen}\mbox{}\\
 To connect to the camera, use the command: 
 
 \begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
 $ screen file_path 115200
 \end{lstlisting}
 
-... where \importantKeyword{file_path} is the full path to the special device file (e.g. \importantKeyword{/dev/ttyUSB0} or \importantKeyword{/dev/cu.SLAB_USBtoUART}).
+... where \importantKeyword{file\_path} is the full path to the special device file (e.g. \importantKeyword{/dev/ttyUSB0} or \importantKeyword{/dev/cu.SLAB\_USBtoUART}).
 
 You might have to run the command with superuser rights, i.e.: 
 
@@ -211,7 +210,7 @@ The default credentials are:
 \end{lstlisting}
 
 
-\paragraph{Disconnect}\\
+\paragraph{Disconnect}\mbox{}\\
 
 To exit the camera's operating system, use: 
 
@@ -395,8 +394,6 @@ If your terminal remains blank except for the minicom welcome screen/information
 
 \subsubsection{WiFi access point setup}
 
-\definecolor{keywordBack}{HTML}{FFEDED}
-\newcommand{\importantKeyword}[1]{\colorbox{keywordBack}{\textcolor{BrickRed}{#1}}}
 A neat tool for communicating with your Beta camera via serial port is \importantKeyword{minicom}.
 
 Check if you already have minicom installed on your system by trying to run it:

@@ -1,10 +1,10 @@
 \section{Writing Images}
 
-For writing uncompressed full resolution full bitdepth raw images the AXIOM Beta uses a software called cmv_snap3.\\
+For writing uncompressed full resolution full bitdepth raw images the AXIOM Beta uses a software called cmv\_snap3.\\
 
 It is located in the /root/ directory and writes the images data directly to STDOUT.\\
 
-cmv_snap3 writes images in the \href{https://wiki.apertus.org/index.php/RAW12}{RAW12} format. Writing one image takes a few seconds depending on where the image is written to so this method is not viable for recording video footage other than timelapse. 
+cmv\_snap3 writes images in the \href{https://wiki.apertus.org/index.php/RAW12}{RAW12} format. Writing one image takes a few seconds depending on where the image is written to so this method is not viable for recording video footage other than timelapse. 
 
 
 
@@ -48,13 +48,13 @@ Write image plus metadata (sensor configuration) to cameras internal micro SD ca
 ./cmv_snap3 -2 -r -e 20ms > image.raw12
 \end{lstlisting} 
 
-You can also use cmv_snap3 to change to exposure time (to 5 milliseconds in this example) without actually capturing an image, for the that -z parameter is used to not produce any data output: 
+You can also use cmv\_snap3 to change to exposure time (to 5 milliseconds in this example) without actually capturing an image, for the that -z parameter is used to not produce any data output: 
 
 \begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
 ./cmv_snap3 -z -e 5ms
 \end{lstlisting} 
 
-That cmv_snap3 writes data to STDOUT makes it very versatile, we can for example capture images from and to a remote Linux machine connected to the Beta via Ethernet easily (lets assume the AXIOM Betas camera IP is set up as: 192.168.0.9 - SSH access has to be set up for this to work with a keypair) 
+That cmv\_snap3 writes data to STDOUT makes it very versatile, we can for example capture images from and to a remote Linux machine connected to the Beta via Ethernet easily (lets assume the AXIOM Betas camera IP is set up as: 192.168.0.9 - SSH access has to be set up for this to work with a keypair) 
 
 \begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
 ssh root@192.168.0.9 "./cmv_snap3 -2 -r -e 10ms" > snap.raw12
@@ -81,7 +81,7 @@ With raw2dng compiled inside the camera you can capture images directly to DNG, 
 \end{lstlisting} 
 
 
-\textbf{Note:} Supplying exposure time as parameter is required otherwise cmv_snap3 will not capture an image. The exposure time can be supplied in "s" (seconds), "ms" (milliseconds), "us" (microseconds) and "ns" (nanoseconds). Decimal values also work (eg. "15.5ms"). 
+\textbf{Note:} Supplying exposure time as parameter is required otherwise cmv\_snap3 will not capture an image. The exposure time can be supplied in "s" (seconds), "ms" (milliseconds), "us" (microseconds) and "ns" (nanoseconds). Decimal values also work (eg. "15.5ms"). 
 
 
 \subsection{Image Overlays}
