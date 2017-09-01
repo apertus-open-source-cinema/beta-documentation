@@ -14,31 +14,21 @@ Details for the sensor datasheet are on GitHub under \href{https://github.com/ap
 
 Read register 115 (which contains the analog gain settings): 
 
-\newcommand{\consoleCommand}[1]{%
+\newcommand{\consoleCommand}[1]{
 	\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]^^J
-	#1^^J
+	#1
 	\end{lstlisting}
 }
 
 \consoleCommand{cmv\_reg 115}
- 
 
 Return value:
-
-\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
-0x00
-\end{lstlisting} 
+\consoleCommand{0x00} 
 
 Means we are currently operating at analog gain x1 = unity gain\\
 
-
 Set register 115 to gain x2: 
-
-\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
-cmv_reg 115 1
-\end{lstlisting}
-
-
+\consoleCommand{cmv\_reg 115 1}
 
 \subsection{Setting Exposure Time}
 
