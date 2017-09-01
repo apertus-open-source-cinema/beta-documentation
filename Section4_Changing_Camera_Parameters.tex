@@ -14,9 +14,14 @@ Details for the sensor datasheet are on GitHub under \href{https://github.com/ap
 
 Read register 115 (which contains the analog gain settings): 
 
-\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
-cmv_reg 115
-\end{lstlisting} 
+\newcommand{\consoleCommand}[1]{%
+	\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]^^J
+	#1^^J
+	\end{lstlisting}
+}
+
+\consoleCommand{cmv\_reg 115}
+ 
 
 Return value:
 
