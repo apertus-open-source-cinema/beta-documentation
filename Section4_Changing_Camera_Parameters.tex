@@ -15,7 +15,7 @@ Details for the sensor datasheet are on GitHub under \href{https://github.com/ap
 Read register 115 (which contains the analog gain settings): 
 
 \begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
-cmv\_reg 115
+cmv_reg 115
 \end{lstlisting} 
 
 Return value:
@@ -30,7 +30,7 @@ Means we are currently operating at analog gain x1 = unity gain\\
 Set register 115 to gain x2: 
 
 \begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
-cmv\_reg 115 1
+cmv_reg 115 1
 \end{lstlisting}
 
 
@@ -40,7 +40,7 @@ cmv\_reg 115 1
 To set the exposure time use the cmv\_snap3 tool with -z parameter (this will tell the software to not save the image): 
 
 \begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
-./cmv\_snap3 -e 9.2ms -z
+./cmv_snap3 -e 9.2ms -z
 \end{lstlisting}
 
 \textbf{Note:} The exposure time can be supplied in "s" (seconds), "ms" (milliseconds), "us" (microseconds) and "ns" (nanoseconds). Decimal values also work (eg. "15.5ms"). 
@@ -53,11 +53,12 @@ To set the exposure time use the cmv\_snap3 tool with -z parameter (this will te
 
 Set gain and related settings (ADC range and offsets). 
 
-\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em,     ./set_gain.sh 1 
-    ./set\_gain.sh 2
-    ./set\_gain.sh 3/3 # almost the same as gain 1
-    ./set\_gain.sh 3
-    ./set\_gain.sh 4
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em]
+    ./set_gain.sh 1 
+    ./set_gain.sh 2
+    ./set_gain.sh 3/3 # almost the same as gain 1
+    ./set_gain.sh 3
+    ./set_gain.sh 4
 \end{lstlisting}
 
 
@@ -68,9 +69,10 @@ Set gain and related settings (ADC range and offsets).
 
 Set the gamma value: 
 
-\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em,     ./    ./gamma_conf.sh 0.4
-    ./gamma\_conf.sh 0.9
-    ./gamma\_conf.sh 1
-    ./gamma\_conf.sh 2
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em]
+    ./gamma_conf.sh 0.4
+    ./gamma_conf.sh 0.9
+    ./gamma_conf.sh 1
+    ./gamma_conf.sh 2
 \end{lstlisting}
 
