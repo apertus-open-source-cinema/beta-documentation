@@ -187,11 +187,369 @@ Mac requirements for compiling: gcc4.9(via homebrew):
 
 \consoleCommand{brew install homebrew/versions/gcc49}
 
-Also install ffmpeg
+Also install ffmpeg\\
 
 To do all the raw processing in one single command (after ffmpeg codec copy processing): 
 
 \consoleCommand{./hdmi4k INPUT.MOV - | ./raw2dng --fixrnt --pgm --black=120 frame%05d.dng}
+
+
+
+\subparagraph{Raw processing recorder benchmarking}
+
+We can analyze footage recorded by the 3rd party recorder but we would need the following:\\
+
+- Make sure your Beta is running in experimental 4k raw mode (1080p60 with A+B frames)
+- Short HDMI captured clip from the 3rd party recorder
+- Raw12 still image captured during the HDMI recording\\
+
+This kind of script is helpful to execute during HDMI recording: 
+
+\consoleCommand{#stop HDMI stream:
+fil\_reg 15 0
+ 
+#capture image
+./cmv\_snap3 -r -2 -e 10ms > image.raw12
+ 
+#start HDMI stream:
+fil\_reg 15 0x01000100}
+
+Taking a snapshot during HDMI recording with the above script will pause the HDMI stream for a few seconds, where it will alternate between two frames. These two frames will be from the same raw data as image.raw12, so they contain all that's needed to figure out what kind of processing the HDMI recorder applies to the image, and how to undo it in order to recover the raw data.\\
+
+Ideally, the scene should contain fine details (such as tissue, fine print) and rich colors. A color chart (which usually contains some fine print as well) is a very good choice. \\
+
+... and finally we'd need:\\
+
+- HDMI captured 1-minute clip with dark frames (lens cap on camera, black cloth covering camera in a dark room)
+
+
+
+\subparagraph{Factory Calibration}
+
+Create a variable containing your Betas IP for easy access:
+
+\consoleCommand{export BETA=192.168.1.101}
+
+\textbf{Preperations:}
+
+Install on your AXIOM Beta: 
+
+\consoleCommand{pacman -S python-numpy}
+
+Install the following packages on your PC: 
+
+\consoleCommand{dcraw octave}
+
+For Ubuntu this would look like: 
+
+\consoleCommand{sudo apt-get install dcraw octave}
+
+\textbf{Step 1: Check range of the input signal}
+
+On the Beta set gain to x1 by running: 
+
+\consoleCommand{./set\_gain.sh 1}
+
+Download this Octave file to your PC into your current work directory: 
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+wget https://raw.githubusercontent.com/apertus-open-source-cinema/misc-tools-utilities/master/darkframes/read\_raw.m
+\end{lstlisting}
+
+Capture an overexposed image with the Beta and check the levels: 
+       
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+ssh root@$BETA "./cmv\_snap3 -2 -b -r -e 100ms" > snap.raw12
+    ./raw2dng snap.raw12 --totally-raw
+    octave
+       octave:1> a = read\_raw('snap.DNG')
+       octave:2> prctile(a(:), [0.1 1 50 99 99.9])}
+\end{lstlisting}
+ 
+If everything worked you will get a wall of numbers now.\\ 
+
+Lower numbers should be around 50...300 (certainly not zero). Higher numbers should be around 4000, but not 4095.\\
+
+Repeat for gains 2, 3, 4.\\
+
+Put this in startup script ie: \importantKeyword{kick\_manual.sh} (The systemd service cmv12k is autostarted when boot on and calls the \importantKeyword{kick.sh} and \importantKeyword{halt.sh} scripts on startup and shutdown respectively and those scripts in turn call the \importantKeyword{kick\_manual.sh} and \importantKeyword{halt\_manual.sh} which also should be used when the cmv12k service is disabled for whatever reason) : 
+
+\consoleCommand{./set\_gain.sh 1}   
+
+
+\textbf{Step 2: RCN calibration }
+
+Make sure you have \href{https://github.com/apertus-open-source-cinema/beta-software/tree/master/beta-scripts}{these scripts} already in your Beta's /root/ directly.
+
+Clear the old RCN values: 
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+ssh root@$BETA "./rcn\_clear.py"}
+\end{lstlisting} 
+
+Now you need to make sure that your Beta is not capturing any light (ideally not a single photon should hit the sensor) :\\
+
+1. lose the lens aperture as far as possible
+2. Attach lens cap
+3. Put black lens bag over Beta
+4. Turn off all lights in the room - do this at night or in a completely dark room \\
+
+Take 64 dark frames at 10ms, gain x1. 
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+    ./set\_gain.sh 1
+    fil_reg 15 0 # disable HDMI stream
+    for i in `seq 1 64`; do
+      ssh root@$BETA "./cmv\_snap3 -2 -b -r -e 10ms" > dark-x1-10ms-$i.raw12 
+    done 
+    fil_reg 15 0x01000100  # enable HDMI stream}
+\end{lstlisting} 
+
+Compute a temporary dark frame for RCN calibration: 
+
+\consoleCommand{raw2dng --swap-lines --no-blackcol --calc-darkframe dark-x1-10ms-*.raw12} 
+
+This should process quite quickly and output something like the following at the end: 
+
+\consoleCommand{    Averaged 64 frames exposed from 12.00 to 12.00 ms.
+    Could not compute dark current.
+    Please use different exposures, e.g. from 1 to 50 ms.
+    Dark offset : 0.00
+    Writing darkframe-x1.pgm...
+    Done.} 
+    
+Rename and upload darkframe to your Beta:  
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+mv darkframe-x1.pgm darkframe-rcn.pgm
+    scp darkframe-rcn.pgm root@$BETA:/root/}
+\end{lstlisting} 
+
+Set the RCN values: 
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+ssh root@$BETA "./rcn\_darkframe.py darkframe-rcn.pgm"}
+\end{lstlisting} 
+
+Put this in startup script ie : \importantKeyword{kick\_manual.sh } :
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+./rcn\_darkframe.py darkframe-rcn.pgm }
+\end{lstlisting} 
+
+If you get an error report like this: 
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+    Traceback (most recent call last):
+      File "rcn\_darkframe.py", line 17, in <module>
+        import png
+    ImportError: No module named 'png'}
+\end{lstlisting} 
+
+Make sure the Beta is connected to the Internet via Ethernet and run: 
+
+\consoleCommand{pip install pypng}
+ 
+and then run the python script again.
+
+\textbf{Validation}
+
+\textbf{Method 1:}
+
+Put a lens cap on the camera and check the image on a HDMI monitor.\\
+
+In the camera set the matrix gains to: 
+
+\consoleCommand{./mat4\_conf.sh  20 0 0 0  0 10 10 0  0 10 10 0  0 0 0 10  0 0 0 0}
+
+run:
+
+\consoleCommand{./rcn\_clear.py}
+
+The static noise profile should be visible.\\
+
+run: 
+
+\consoleCommand{./rcn\_darkframe.py darkframe-rcn.pgm }
+
+The static noise profile should be gone. You will still see dynamic row noise (horizontal lines flickering) - thats expected.\\
+
+
+\textbf{Method 2:}
+
+This method is now entirely automated with running one script inside the camera: \href{https://github.com/apertus-open-source-cinema/beta-software/blob/master/beta-scripts/rcn_validation.sh}{https://github.com/apertus-open-source-cinema/beta-software/blob/master/beta-scripts/rcn\_validation.sh}
+
+Capture one darkframe without compensations: 
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+    ssh root@$BETA "./rcn\_clear.py"
+    ssh root@$BETA "./cmv\_snap3 -2 -b -r -e 10ms" > dark-check-1.raw12 }
+\end{lstlisting} 
+
+Capture one darkframe with compensations: 
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+    ssh root@$BETA "./rcn\_darkframe.py darkframe-rcn.pgm"
+    ssh root@$BETA "./cmv\_snap3 -2 -b -r -e 10ms" > dark-check-2.raw12  }
+\end{lstlisting} 
+
+Then use \importantKeyword{raw2dng} to analyze the differences: 
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+    raw2dng --no-darkframe --check-darkframe dark-check-1.raw12
+    raw2dng --no-darkframe --check-darkframe dark-check-2.raw12 }
+\end{lstlisting} 
+
+With the compensated snapshot the column noise should disappear, and only row noise left should be dynamic (not static). Visual inspection: the dark frame should have only horizontal lines, not vertical ones.\\
+
+Sample output: 
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+    Average     : 127.36               # about 128, OK
+    Pixel noise : 5.44                 # this one is a bit high because we only corrected row and column offsets (it's OK)
+    Row noise   : 2.30 (42.2%)         # this one should be only dynamic row noise - see Method 3 below.
+    Col noise   : 0.20 (3.8%)          # this one is very small, that's what we need to check here}
+\end{lstlisting} 
+
+
+\textbf{Method 3:}
+
+Capture 2 frames: 
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+    ssh root@$BETA "./cmv\_snap3 -2 -b -r -e 10ms" > dark-check-1.raw12 
+    ssh root@$BETA "./cmv\_snap3 -2 -b -r -e 10ms" > dark-check-2.raw12 
+\end{lstlisting} 
+
+Convert the two darkframes with raw2dng: 
+
+\consoleCommand{raw2dng dark-check-*}
+
+Make sure you have the required octave function file in place: 
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+    wget https://raw.githubusercontent.com/apertus-open-source-cinema/misc-tools-utilities/master/darkframes/read_raw.m
+\end{lstlisting} 
+
+Also you need to install the octave "signal" and "control" packages from \href{http://octave.sourceforge.net/packages.php}{http://octave.sourceforge.net/packages.php} then, inside octave, run to install:
+
+\consoleCommand{pkg install package_name}
+
+To check whether the entire row noise is dynamic, load the two raw images in octave and check the autocorrelation between the two row noise samples: 
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+    pkg load signal
+    a = read\_raw('dark-check-1.DNG');
+    b = read\_raw('dark-check-2.DNG');
+    ra = mean(a'); ra = ra - mean(ra);
+    rb = mean(b'); rb = rb - mean(rb);
+    xcov(ra, rb, 0, 'coeff')
+\end{lstlisting} 
+
+Result should be very small (about 0.1 or lower). When running this check on two uncalibrated dark frames, you will get around 0.8 - 0.9.
+
+\textbf{Step 3: Dark frame calibration}
+
+Make sure the RCN calibration from previous steps is in place before continueing here.\\
+
+Take dark frames at various exposure times and gains.
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+    for i in 1 2 3 4; do
+      for e in `seq 1 100`; do
+        for g in 1 2 3 4; do
+          ssh root@$BETA "./set\_gain.sh $g"
+          ssh root@$BETA "./cmv\_snap3 -2 -b -r -e ${e}ms" > dark-x${g}-${e}ms-$i.raw12
+        done
+      done
+    done
+\end{lstlisting} 
+
+Compute dark frames for each gain: 
+
+\consoleCommand{    raw2dng --swap-lines --calc-dcnuframe dark-x1-*.raw12
+    raw2dng --swap-lines --calc-dcnuframe dark-x2-*.raw12
+    raw2dng --swap-lines --calc-dcnuframe dark-x3-*.raw12
+    raw2dng --swap-lines --calc-dcnuframe dark-x4-*.raw12}
+    
+Save the following files (N=1..4): 
+ 
+\consoleCommand{darkframe-xN.pgm
+    dcnuframe-xN.pgm}
+    
+These files should be used in postprocessing. Place them in the directory where you capture raw12 files, so raw2dng will use them.\\
+
+\textbf{Validation}\\ 
+
+On the same dark frames, or - even better - on a new set of dark frames, run: 
+
+\consoleCommand{raw2dng --swap-lines --check-darkframe dark*.raw12 > dark-check.log}
+
+Upload the log for detailed analysis.\\
+
+Typical good values are:\\
+
+average value: close to 128\\
+
+pixel noise: about 3 or 4 (may increase at longer exposure times)\\
+
+row noise and column noise: similar to Step 2\\
+
+\textbf{Step 4: Color profiling}\\
+
+Set gain x1:
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+ssh root@$BETA "./set_gain.sh 1"
+\end{lstlisting} 
+
+Take a picture of the IT8 chart, correctly exposed.\\
+
+Edit the coordinates and the raw file name in \importantKeyword{calib\_argyll.sh} ( \href{https://github.com/apertus-open-source-cinema/misc-tools-utilities/blob/master/color-calibration/calib_argyll.sh}{https://github.com/apertus-open-source-cinema/misc-tools-utilities/blob/master/color-calibration/calib_argyll.sh} ). 
+
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+    ssh root@$BETA "./cmv\_snap3 -2 -b -r -e 10ms" > it8chart.raw12
+    ./calib\_argyll.sh IT8
+\end{lstlisting} 
+
+Save the following files:\\
+
+- ICC profile (*.icc)
+- OCIO configuration (copy/paste from terminal) + LUT file (*.spi1d) 
+
+\textbf{Validation}
+
+Render the IT8 chart in Blender, using the OCIO configuration.\\
+
+Same with the ICC profile (Adobe? RawTherapee? What apps support ICC?)\\
+
+(todo: detailed steps)\\
+
+\textbf{Step 5: HDMI dark frames }
+
+Record a 1-minute clip with lens cap on.\\
+
+Average odd and even frames.\\
+
+(todo: polish and upload the averaging script)\\
+
+(todo: check if the HDMI dark frames can be computed from regular dark frames)\\
+
+Results: darkframe-hdmi-A.ppm and darkframe-hdmi-B.ppm.\\
+
+\textbf{Step 6: HDMI filters for raw recovery }
+
+This calibration is for the recorder, not for the camera. It's for recovering the original raw data from the HDMI, so it has nothing to do with sensor profiling and such.\\
+
+Record some scene with high detail AND rich colors.\\
+
+Take a raw12 snapshot in the middle of recording. The HDMI stream will pause for a few seconds.\\
+
+Upload two frames from the paused clip, together with the raw12 file. This calibration will be hardcoded in hdmi4k.\\
+
+The two frames must be in the native format of your video recorder (not DNG). You should be able to cut the video with ffmpeg -vcodec copy. 
+
+
 
 \subsubsection{EDL Parser}
 \subsubsection{cmv perf3}
