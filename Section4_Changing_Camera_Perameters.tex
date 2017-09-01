@@ -1,0 +1,76 @@
+\section{Changing Camera Parameters}
+
+Some itro text required\\
+
+\subsection{Setting CMV12000 sensor registers}
+
+\textbf{cmv\_reg}
+
+Get and Set CMV12000 image sensor registers (CMV12000 sports 128x16 Bit registers).\\
+
+Details for the sensor datasheet are on GitHub under \href{https://github.com/apertus-open-source-cinema/beta-hardware/tree/master/Datasheets}{Datasheets}\\
+
+\textbf{Examples:}\\
+
+Read register 115 (which contains the analog gain settings): 
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+cmv\_reg 115
+\end{lstlisting} 
+
+Return value:
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+0x00
+\end{lstlisting} 
+
+Means we are currently operating at analog gain x1 = unity gain\\
+
+
+Set register 115 to gain x2: 
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+cmv\_reg 115 1
+\end{lstlisting}
+
+
+
+\subsection{Setting Exposure Time}
+
+To set the exposure time use the cmv\_snap3 tool with -z parameter (this will tell the software to not save the image): 
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+./cmv\_snap3 -e 9.2ms -z
+\end{lstlisting}
+
+\textbf{Note:} The exposure time can be supplied in "s" (seconds), "ms" (milliseconds), "us" (microseconds) and "ns" (nanoseconds). Decimal values also work (eg. "15.5ms"). 
+
+
+
+\subsection{Setting gain value}
+
+\textbf{set\_gain.sh}\\
+
+Set gain and related settings (ADC range and offsets). 
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em,     ./set_gain.sh 1 
+    ./set\_gain.sh 2
+    ./set\_gain.sh 3/3 # almost the same as gain 1
+    ./set\_gain.sh 3
+    ./set\_gain.sh 4
+\end{lstlisting}
+
+
+
+\subsection{Setting Gamma Values}
+
+\textbf{gamma\_conf.sh}\\
+
+Set the gamma value: 
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em,     ./    ./gamma_conf.sh 0.4
+    ./gamma\_conf.sh 0.9
+    ./gamma\_conf.sh 1
+    ./gamma\_conf.sh 2
+\end{lstlisting}
+
