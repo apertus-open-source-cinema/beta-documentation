@@ -10,7 +10,7 @@ HDMI is a two-way communication protocol and supports many different formats/fre
 
 In general we discovered that monitors are more flexible when it comes to HDMI (TMDS) freqencies as they just "tune" into (sync to) the provided clock/data rate. Recorders expect signals to be in a much stricter/narrower range and will not work (show "no signal") if there is a minor deviation. 
 
-Watch this 33C3 talk by Tim Ansell about \href{https://media.ccc.de/v/33c3-8057-dissecting_hdmi}Dissecting HDMI} to get insight into how HDMI works.
+Watch this 33C3 talk by Tim Ansell about \href{https://media.ccc.de/v/33c3-8057-dissecting_hdmi}{Dissecting HDMI} to get insight into how HDMI works.
 
 
 \subsubsection{External HDMI Recording}
@@ -19,11 +19,12 @@ Settings for VSync, HSync, etc. inside the AXIOM Beta can be found in:
 
 \consoleCommand{/root/gen\_init.sh}
 
-For example the Atomos SHOGUN was found to work with these HDMI parameters: 
-
-\consoleCommand{    scn_reg  0 2200             # total_w
-    scn\_reg  1 1125             # total_h
-    scn\_reg  2   60             # total_f
+For example the Atomos SHOGUN was found to work with these HDMI parameters:  
+   
+\begin{lstlisting}[breaklines=true, breakatwhitespace=true]
+scn\_reg  0 2200             # total\_w
+    scn\_reg  1 1125             # total\_h
+    scn\_reg  2   60             # total\_f
      
     scn\_reg  4  262             # hdisp\_s
     scn\_reg  5 2182             # hdisp\_e
@@ -38,7 +39,9 @@ For example the Atomos SHOGUN was found to work with these HDMI parameters:
     scn\_reg 32  252             # pream\_s
     scn\_reg 33  260             # guard\_s
     scn\_reg 34  294             # terc4\_e
-    scn\_reg 35  296             # guard\_e}
+    scn\_reg 35  296             # guard\_e
+\end{lstlisting}
+   
 
 Currently it is not possible to alter TMDS and Clock frequencies from the userspace (requires new FPGA bitstream).\\
 
@@ -46,7 +49,7 @@ For the firmware there are two modes available, the 30Hz and 60Hz variant. You c
 
 cmv\_hdmi3.bit is the FPGA bitstream loaded for the HDMI interface. We use symlinks to switch this file easily.\\
 
-Before doing this, don't forget to check if the files (cmv\_hdmi3_60.bit or cmv\_hdmi3_30.bit) really exist in the /root folder.\\
+Before doing this, don't forget to check if the files (cmv\_hdmi3\_60.bit or cmv\_hdmi3\_30.bit) really exist in the /root folder.\\
 
 The output is always in 8bpc RGB color space without subsampling (4:4:4). Not all capture devices can manage this.\\
 
