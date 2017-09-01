@@ -137,6 +137,12 @@
 \definecolor{keywordBack}{HTML}{FFEDED}
 \newcommand{\importantKeyword}[1]{\colorbox{keywordBack}{\textcolor{BrickRed}{#1}}}
 
+\newcommand{\consoleCommand}[1]{
+	\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]^^J
+	#1
+	\end{lstlisting}
+}
+
 %----------------------------------------------------------------------------------------
 %	NAMING
 %----------------------------------------------------------------------------------------
