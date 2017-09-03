@@ -39,10 +39,6 @@ To cut out a video between IN and OUT with ffmpeg but maintaing the original enc
     --onlyB             : Use data from B frames only (for bad takes)
 \end{lstlisting}
 
-
-
-
-
 \subsection{RAW12 to DNG}
 
 Converts AXIOM Beta raw image to DNG. 
@@ -147,11 +143,11 @@ Debug options:
                       
 Example:                       
 
-\consoleCommand{./raw2dng --fixrnt --pgm --black=120 frame%05d.dng}
+\consoleCommand{./raw2dng --fixrnt --pgm --black=120 frame\%05d.dng}
 
-\textbf{Compiling raw2dng}\\
+\textbf{Compiling raw2dng}
 
-Compiling raw2dng on a 64bit system requires the gcc-multilib package.\\
+Compiling raw2dng on a 64bit system requires the gcc-multilib package.
 
 \textbf{Ubuntu:} 
 
