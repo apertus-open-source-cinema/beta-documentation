@@ -1,5 +1,4 @@
 \documentclass{article}
-
 \usepackage{fancyhdr} % Required for custom headers
 \usepackage{lastpage} % Required to determine the last page for the footer
 \usepackage{extramarks} % Required for headers and footers
@@ -9,6 +8,8 @@
 \usepackage{courier} % Required for the courier font
 \usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
 \usepackage{hyperref}
+\usepackage{gensymb} 
+
 
 \hypersetup{
     colorlinks=true,
@@ -148,7 +149,7 @@
 %----------------------------------------------------------------------------------------
 
 \newcommand{\DocRef}{ABM.01.01.En.} % Foot Left
-\newcommand{\AssName}{apertus° Association} % Head Left
+\newcommand{\AssName}{apertus\degree Association} % Head Left
 \newcommand{\DocName}{AXIOM Beta User Manual} % Head Right
 
 %----------------------------------------------------------------------------------------
@@ -196,7 +197,8 @@ For more information, email team@apertus.org or visit \href{https://apertus.org}
 \textbf{Note:} In some instances the instructions we have prepared are written in a manor that can be followed by people without a deep technical knowledge. If you are an advanced user please keep this in mind.\\
 \\This document has been compiled using LaTeX and its files are stored in the apertus GitHub repository here. If you choose to make any changes to this document please notify a member of the Team so that those changes can be implimented into instances of this guide that are being made available in other locations and formats eg. the project's Wiki page.
 
-\newpage
+\usepackage{gensymb} 
+\usepackage{siunitx} % Required for degree symbol\newpage
 
 \include{Section1_General_Information}
 \include{Section2_Operating_Basics}
