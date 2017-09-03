@@ -46,7 +46,7 @@ So, 16 dark frames will reduce the read noise in the dark frame by 2 stops, 64 f
 
 Okay, but how much noise will be added to the output image?\\
 
-Let's say the read noise stdev in one image is r, so a dark frame averaged from N frames will have noise \consoleCommand{stdev = r/sqrt(N)}. Therefore, the noise in the output image will be: \consoleCommand{sqrt(r^2 + r^2/N) = r * sqrt(1 + 1/N)}.\\
+Let's say the read noise stdev in one image is r, so a dark frame averaged from N frames will have noise \consolecommand{stdev = r/sqrt(N)}. Therefore, the noise in the output image will be: \consolecommand{sqrt(r^2 + r^2/N) = r * sqrt(1 + 1/N)}.\\
 
 Check it in octave:\\ 
 
@@ -110,11 +110,11 @@ Experimentally, we have found the dark frame changes with exposure at roughly 0.
 
 Command-line:
 
-\consoleCommand{raw2dng *x1*.raw12 --calc-darkframe}
+\consolecommand{raw2dng *x1*.raw12 --calc-darkframe}
 
 Example: a dark frame created from 256 exposures, between 1.2ms and 77ms, without using black reference columns. The image was adjusted (with a constant offset) to match a zero-length exposure, so calling it bias frame may be a good idea. If we use it to correct the individual dark frames, we should no longer see a variation in overall brightness. 
 
-\consoleCommand{    Averaged 256 frames exposed from 1.19 to 76.79 ms.
+\consolecommand{    Averaged 256 frames exposed from 1.19 to 76.79 ms.
     Dark current: 0.0653 DN/ms}
     
 Image sequence: bias frame, single dark frames at exposures 1.2, 6 and 77 ms, corrected with the bias frame and the (scalar) dark current average. All files scaled to show a range of 60 DN, but the master dark frame has a different offset than the others.     
@@ -154,7 +154,7 @@ So, rather than using a single scalar value (0.06 dn/ms/gain) for all pixels, we
 
 Command-line:\\
 
-\consoleCommand{raw2dng *x1*.raw12 --calc-dcnuframe}
+\consolecommand{raw2dng *x1*.raw12 --calc-dcnuframe}
 
 Example: bias frame (static offset) and dark current frame (exposure-dependent offset). Notice the bias frame looks quite similar to the previous one, but a little darker. The median value of the dark current frame is, unsurprisingly, 0.0645 DN/ms. 
 
@@ -317,7 +317,7 @@ These operations should be simple enough to be implemented in FPGA, as real-time
 
 Acquire 16 dark frames, gain x1, exposures between 1 and 50 ms, save them under the 'darkframes' subdirectory, then run: 
 
-\consoleCommand{raw2dng darkframes/*x1*.raw12 --calc-darkframe --swap-lines}
+\consolecommand{raw2dng darkframes/*x1*.raw12 --calc-darkframe --swap-lines}
 
 Result: darkframe-x1.pgm.\\
 
@@ -328,7 +328,7 @@ Repeat for other gains if needed.\\
 
 Acquire 256 dark frames, gain x1, exposures between 1 and 64 ms in linear increments (4 images at each setting), save them under the 'darkframes' subdirectory, then run: 
 
-\consoleCommand{raw2dng darkframes/*x1*.raw12 --calc-dcnuframe --swap-lines}
+\consolecommand{raw2dng darkframes/*x1*.raw12 --calc-dcnuframe --swap-lines}
 
 Result: darkframe-x1.pgm and dcnuframe-x1.pgm.\\
 
@@ -338,11 +338,11 @@ Repeat for other gains if needed. \\
 
 You can verify the calibration by rendering the same individual dark frames, this time corrected, to check the residuals. Or, even better, acquire a new set of dark frames at the same settings, and check those instead: 
 
-\consoleCommand{raw2dng darkframes/*x1*.raw12 --check-darkframe --swap-lines}
+\consolecommand{raw2dng darkframes/*x1*.raw12 --check-darkframe --swap-lines}
 
 You will see the average value, pixel noise and row/column noise levels (both absolute and relative to pixel noise) for each dark frame. Example:
 
-\consoleCommand{    Average     : 127.48
+\consolecommand{    Average     : 127.48
     Pixel noise : 2.48
     Row noise   : 0.61 (24.6%)
     Col noise   : 0.05 (2.2%)}
@@ -353,7 +353,7 @@ Using the reference frames to correct raw12 files.\\
 2. Make sure your \importantKeyword{.raw12} images contain a metadata block.\\
 3. raw2dng will recognize the dark frames and use them for correcting your image. \\
    
-\consoleCommand{    cp /path/to/darkframes/*-x[1-4].pgm .
+\consolecommand{    cp /path/to/darkframes/*-x[1-4].pgm .
     raw2dng *.raw12 --swap-lines}
     
 \textbf{Note:} you need --swap-lines as an workaround for an old bug introduced in the Beta, but wasn't fixed yet in the FPGA.\\    
@@ -364,7 +364,7 @@ This is not exactly useful when dealing with multiple folders, so until we'll ha
 2. Make sure your .raw12 images contain a metadata block.\\
 3. Use paths when passing input files raw2dng (the output files will be saved in the same directory as the input file).\\
 
-\consoleCommand{    cd /path/to/darkframes
+\consolecommand{    cd /path/to/darkframes
     ls *.pgm
       darkframe-x1.pgm       dcnuframe-x1.pgm       ...
     raw2dng /path/to/images/*.raw12 --swap-lines}
@@ -442,7 +442,7 @@ Kalman filter theory: \href{http://robocup.mi.fu-berlin.de/buch/kalman.pdf}{http
 
 From page 3, if we know how noisy our estimations are, the optimal weights are inversely proportional with the noise variances:\\
 
-\consoleCommand{x\_optimal = (x1 * var(x2) + x2 * var(x1)) / (var(x1) + var(x2))} 
+\consolecommand{x\_optimal = (x1 * var(x2) + x2 * var(x1)) / (var(x1) + var(x2))} 
 
 Here, let's say R = x1 is row noise (stdev = 1.6 at gain=x1) and x2 is black column noise. 
 

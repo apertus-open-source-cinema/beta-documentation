@@ -20,7 +20,7 @@ Watch this 33C3 talk by Tim Ansell about \href{https://media.ccc.de/v/33c3-8057-
 
 Settings for VSync, HSync, etc. inside the AXIOM Beta can be found in: 
 
-\consoleCommand{/root/gen\_init.sh}
+\consolecommand{/root/gen\_init.sh}
 
 For example the Atomos SHOGUN was found to work with these HDMI parameters:  
 
@@ -78,27 +78,27 @@ Changes for Blackmagic Video Assist and Video Assist 4K, tested on firmware 2.3.
 
 Add: 
 
-\consoleCommand{./gen\_init.sh 1080p60BMVA}
+\consolecommand{./gen\_init.sh 1080p60BMVA}
 
 comment out any other ./gen\_init.sh entries. 
 
 \textbf{edit gen\_init.sh}
 
-\consoleCommand{./gen\_init.sh 1080p60BMVA}
+\consolecommand{./gen\_init.sh 1080p60BMVA}
 
 \textbf{edit gen\_init.sh}
 
 Replace:
 
-\consoleCommand{SHOGUN)}
+\consolecommand{SHOGUN)}
 
 With:
 
-\consoleCommand{SHOGUN|1080p60BMVA|1080p30BMVA)}
+\consolecommand{SHOGUN|1080p60BMVA|1080p30BMVA)}
 
 Add the section below:
 
-\consoleCommand{  
+\consolecommand{  
 	1080p50BMVA|1080p25BMVA)^^J
 	scn\_reg  0 2640	# total\_w^^J
 	scn\_reg  1 1125    # total\_h^^J
@@ -161,28 +161,28 @@ This mode requires darkframes which are created in the course of a camera Factor
 
 Input:
 
-\consoleCommand{\./hdmi\_rectest.sh}
+\consolecommand{\./hdmi\_rectest.sh}
 
 Inside that script the following command is worth noting:\\
 
 Enable experimental raw mode: 
 
-\consoleCommand{scn\_reg 31 0x0A01}
+\consolecommand{scn\_reg 31 0x0A01}
 
 Disable experimental raw mode: 
 
-\consoleCommand{scn\_reg 31 0x0001}
+\consolecommand{scn\_reg 31 0x0001}
 
 If you get an error report like this: 
 
-\consoleCommand{    Traceback (most recent call last):
+\consolecommand{    Traceback (most recent call last):
 	File "rcn\_darkframe\.py", line 17, in <module>
 	import png
 	ImportError: No module named 'png'}
 
 Make sure the Beta is connected to the Internet via Ethernet and run:     
 
-\consoleCommand{pip install pypng}
+\consolecommand{pip install pypng}
 
 
 
@@ -195,13 +195,13 @@ Required packages: ffmpeg build-essentials
 
 Mac requirements for compiling: gcc4.9(via homebrew): 
 
-\consoleCommand{brew install homebrew/versions/gcc49}
+\consolecommand{brew install homebrew/versions/gcc49}
 
 Also install ffmpeg\\
 
 To do all the raw processing in one single command (after ffmpeg codec copy processing): 
 
-\consoleCommand{\./hdmi4k INPUT\.MOV - | \./raw2dng --fixrnt --pgm --black=120 frame\%05d\.dng}
+\consolecommand{\./hdmi4k INPUT\.MOV - | \./raw2dng --fixrnt --pgm --black=120 frame\%05d\.dng}
 	
 	
 	
@@ -221,28 +221,28 @@ This mode requires darkframes which are created in the course of a camera Factor
 
 Input:
 
-\consoleCommand{\./hdmi\_rectest.sh}
+\consolecommand{\./hdmi\_rectest.sh}
 
 Inside that script the following command is worth noting:\\
 
 Enable experimental raw mode: 
 
-\consoleCommand{scn\_reg 31 0x0A01}
+\consolecommand{scn\_reg 31 0x0A01}
 
 Disable experimental raw mode: 
 
-\consoleCommand{scn\_reg 31 0x0001}
+\consolecommand{scn\_reg 31 0x0001}
 
 If you get an error report like this: 
 
-\consoleCommand{    Traceback (most recent call last):
+\consolecommand{    Traceback (most recent call last):
 	File "rcn\_darkframe\.py", line 17, in <module>
 	import png
 	ImportError: No module named 'png'}
 
 Make sure the Beta is connected to the Internet via Ethernet and run:     
 
-\consoleCommand{pip install pypng}
+\consolecommand{pip install pypng}
 
 
 
@@ -257,7 +257,7 @@ We can analyze footage recorded by the 3rd party recorder but we would need the 
 	
 This kind of script is helpful to execute during HDMI recording: 
 	
-\consoleCommand{
+\consolecommand{
 	# stop HDMI stream:^^J
 	fil\_reg 15 0^^J
 	^^J
@@ -282,27 +282,27 @@ Ideally, the scene should contain fine details (such as tissue, fine print) and 
 \subparagraph{Factory Calibration}
 	
 Create a variable containing your Betas IP for easy access:
-\consoleCommand{export BETA=192.168.1.101}
+\consolecommand{export BETA=192.168.1.101}
 	
 \textbf{Preperations:}\\
 	
 Install on your AXIOM Beta: 
 	
-\consoleCommand{pacman -S python-numpy}
+\consolecommand{pacman -S python-numpy}
 	
 Install the following packages on your PC: 
 	
-\consoleCommand{dcraw octave}
+\consolecommand{dcraw octave}
 	
 For Ubuntu this would look like: 
 	
-\consoleCommand{sudo apt-get install dcraw octave}
+\consolecommand{sudo apt-get install dcraw octave}
 	
 \textbf{Step 1: Check range of the input signal}\\
 	
 On the Beta set gain to x1 by running: 
 	
-\consoleCommand{./set\_gain.sh 1}
+\consolecommand{./set\_gain.sh 1}
 	
 Download this Octave file to your PC into your current work directory: 
 	
@@ -328,7 +328,7 @@ Repeat for gains 2, 3, 4.\\
 	
 Put this in startup script ie: \importantKeyword{kick\_manual.sh} (The systemd service cmv12k is autostarted when boot on and calls the \importantKeyword{kick.sh} and \importantKeyword{halt.sh} scripts on startup and shutdown respectively and those scripts in turn call the \importantKeyword{kick\_manual.sh} and \importantKeyword{halt\_manual.sh} which also should be used when the cmv12k service is disabled for whatever reason) : 
 	
-\consoleCommand{./set\_gain.sh 1}   
+\consolecommand{./set\_gain.sh 1}   
 	
 \textbf{Step 2: RCN calibration}\\
 	
@@ -336,7 +336,7 @@ Make sure you have \href{https://github.com/apertus-open-source-cinema/beta-soft
 	
 Clear the old RCN values: 
 	
-\consoleCommand{
+\consolecommand{
 	ssh root@\$BETA "./rcn\_clear.py"
 }
  
@@ -361,11 +361,11 @@ Take 64 dark frames at 10ms, gain x1.
 	
 Compute a temporary dark frame for RCN calibration: 
 	
-\consoleCommand{raw2dng --swap-lines --no-blackcol --calc-darkframe dark-x1-10ms-*.raw12} 
+\consolecommand{raw2dng --swap-lines --no-blackcol --calc-darkframe dark-x1-10ms-*.raw12} 
 	
 This should process quite quickly and output something like the following at the end: 
 	
-\consoleCommand{    Averaged 64 frames exposed from 12.00 to 12.00 ms.
+\consolecommand{    Averaged 64 frames exposed from 12.00 to 12.00 ms.
 	Could not compute dark current.
 	Please use different exposures, e.g. from 1 to 50 ms.
 	Dark offset : 0.00
@@ -402,7 +402,7 @@ ImportError: No module named 'png'
 
 Make sure the Beta is connected to the Internet via Ethernet and run: 
 
-\consoleCommand{pip install pypng}
+\consolecommand{pip install pypng}
 
 and then run the python script again.\\
 
@@ -414,17 +414,17 @@ Put a lens cap on the camera and check the image on a HDMI monitor.\\
 
 In the camera set the matrix gains to: 
 
-\consoleCommand{./mat4\_conf.sh  20 0 0 0  0 10 10 0  0 10 10 0  0 0 0 10  0 0 0 0}
+\consolecommand{./mat4\_conf.sh  20 0 0 0  0 10 10 0  0 10 10 0  0 0 0 10  0 0 0 0}
 
 run:
 
-\consoleCommand{./rcn\_clear.py}
+\consolecommand{./rcn\_clear.py}
 
 The static noise profile should be visible.\\
 
 run: 
 
-\consoleCommand{./rcn\_darkframe.py darkframe-rcn.pgm }
+\consolecommand{./rcn\_darkframe.py darkframe-rcn.pgm }
 
 The static noise profile should be gone. You will still see dynamic row noise (horizontal lines flickering) - thats expected.\\
 
@@ -477,7 +477,7 @@ ssh root@$BETA "./cmv\_snap3 -2 -b -r -e 10ms" > dark-check-2.raw12
 
 Convert the two darkframes with raw2dng: \\
 
-\consoleCommand{raw2dng dark-check-*}
+\consolecommand{raw2dng dark-check-*}
 
 Make sure you have the required octave function file in place:\\ 
 
@@ -487,7 +487,7 @@ wget https://raw.githubusercontent.com/apertus-open-source-cinema/misc-tools-uti
 
 Also you need to install the octave "signal" and "control" packages from \href{http://octave.sourceforge.net/packages.php}{http://octave.sourceforge.net/packages.php} then, inside octave, run to install:\\
 
-\consoleCommand{pkg install package\_name}
+\consolecommand{pkg install package\_name}
 
 To check whether the entire row noise is dynamic, load the two raw images in octave and check the autocorrelation between the two row noise samples: \\
 
@@ -521,7 +521,7 @@ done
 
 Compute dark frames for each gain: \\
 
-\consoleCommand{    raw2dng --swap-lines --calc-dcnuframe dark-x1-*.raw12
+\consolecommand{    raw2dng --swap-lines --calc-dcnuframe dark-x1-*.raw12
 	raw2dng --swap-lines --calc-dcnuframe dark-x2-*.raw12
 	raw2dng --swap-lines --calc-dcnuframe dark-x3-*.raw12
 	raw2dng --swap-lines --calc-dcnuframe dark-x4-*.raw12
@@ -529,7 +529,7 @@ Compute dark frames for each gain: \\
 
 Save the following files (N=1..4): 
 	
-\consoleCommand{
+\consolecommand{
 	darkframe-xN.pgm
 	dcnuframe-xN.pgm
 }
@@ -540,7 +540,7 @@ These files should be used in postprocessing. Place them in the directory where 
 
 On the same dark frames, or - even better - on a new set of dark frames, run: 
 
-\consoleCommand{raw2dng --swap-lines --check-darkframe dark*.raw12 > dark-check.log}
+\consolecommand{raw2dng --swap-lines --check-darkframe dark*.raw12 > dark-check.log}
 
 Upload the log for detailed analysis.\\
 
@@ -739,7 +739,7 @@ SDI Instructions required - ETA Dec 2017.
 
 Enable:
 
-\consoleCommand{    
+\consolecommand{    
 	rm -f cmv\_hdmi3.bit
     ln -s cmv\_hdmi3_60.bit cmv\_hdmi3.bit
     sync
@@ -753,7 +753,7 @@ Enable:
 
 Enable:
 
-\consoleCommand{    
+\consolecommand{    
     rm -f cmv\_hdmi3.bit
     ln -s cmv\_hdmi3\_30.bit cmv\_hdmi3.bit
     sync
@@ -769,10 +769,10 @@ Independet of the firmware you can switch the rate of the generator. In setup.sh
 
 After changing the generator mode, make sure to restart it: 
 
-\consoleCommand{    
+\consolecommand{    
 	./halt\_manual.sh && ./kick\_manual.sh}
 
-\consoleCommand{    
+\consolecommand{    
     ./gen\_init.sh 1080p60
     ./gen\_init.sh 1080p50
     ./gen\_init.sh 1080p25}
@@ -780,12 +780,12 @@ After changing the generator mode, make sure to restart it:
     
 To enable the shogun mode, which is only possibly by current hardware:
 
-\consoleCommand{    
+\consolecommand{    
 	./gen\_init.sh SHOGUN}
 	
 1080p25 mode is known to work on the Shogun if using the SHOGUN profile and then setting:	
     
-\consoleCommand{    
+\consolecommand{    
 	scn\_reg 0 2640} 
 	
 In Shogun mode, the exposure (shutter) is synced to the output frame rate, but can be a multiple, i.e. with 60FPS output, it can be 60, 30, 20, 15, 12, ... The exposure time (shutter angle if divided by FPS) is entirely controlled by the sensor at the moment.\\
@@ -802,8 +802,8 @@ In the future, this will be combined and processed by only one piece of software
 
 Stop HDMI live stream: 
 
-\consoleCommand{fil\_reg 15 0} 
+\consolecommand{fil\_reg 15 0} 
 
 Start HDMI live stream: 
 
-\consoleCommand{fil\_reg 15 0x01000100} 
+\consolecommand{fil\_reg 15 0x01000100} 

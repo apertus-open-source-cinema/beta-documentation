@@ -14,19 +14,19 @@ Make sure the AXIOM Beta is connected to the internet and then on the commandlin
 
 Update mirrors database: 
 
-\consoleCommand{pacman -Syy}
+\consolecommand{pacman -Syy}
 
 Install webserver: 
 
-\consoleCommand{pacman -S lighttpd php php-cgi}
+\consolecommand{pacman -S lighttpd php php-cgi}
 
 Start the webservice: 
 
-\consoleCommand{systemctl start lighttpd}
+\consolecommand{systemctl start lighttpd}
 
 Write any pending changes to the file system:
 
-\consoleCommand{sync}
+\consolecommand{sync}
 
 
 
@@ -36,7 +36,7 @@ Write any pending changes to the file system:
 
 This follows the guide from the lighttpd archlinux wiki page: \href{https://wiki.archlinux.org/index.php/lighttpd}{https://wiki.archlinux.org/index.php/lighttpd}
 
-\consoleCommand{    mkdir /etc/lighttpd/conf.d/
+\consolecommand{    mkdir /etc/lighttpd/conf.d/
     nano /etc/lighttpd/conf.d/cgi.conf}
     
 ... and place the following content in the file: 
@@ -60,11 +60,11 @@ This follows the guide from the lighttpd archlinux wiki page: \href{https://wiki
 
 For PHP scripts you will need to make sure the following is set in /etc/php/php.ini 
 
-\consoleCommand{cgi.fix\_pathinfo = 1}
+\consolecommand{cgi.fix\_pathinfo = 1}
 
 In your Lighttpd configuration file, /etc/lighttpd/lighttpd.conf add: 
 
-\consoleCommand{include "conf.d/cgi.conf"}
+\consolecommand{include "conf.d/cgi.conf"}
 
 Create a new configuration file /etc/lighttpd/conf.d/fastcgi.conf 
 
@@ -105,15 +105,15 @@ Create a new configuration file /etc/lighttpd/conf.d/fastcgi.conf
 
 Make lighttpd use the new configuration file /etc/lighttpd/lighttpd.conf 
 
-\consoleCommand{include "conf.d/fastcgi.conf"}
+\consolecommand{include "conf.d/fastcgi.conf"}
 
 Restart lighttpd: 
 
-\consoleCommand{systemctl restart lighttpd}
+\consolecommand{systemctl restart lighttpd}
 
 To test php create a file: /src/http/index.php with content:
 
-\consoleCommand{    <?php
+\consolecommand{    <?php
     phpinfo();
     ?>} 
     
@@ -135,17 +135,17 @@ Download this repository - \href{https://github.com/apertus-open-source-cinema/b
 
 Under the line: 
 
-\consoleCommand{root ALL=(ALL) ALL}
+\consolecommand{root ALL=(ALL) ALL}
 
 Add:
 
-\consoleCommand{http ALL=(ALL) NOPASSWD: ALL}
+\consolecommand{http ALL=(ALL) NOPASSWD: ALL}
 
 This allows the http user to do anything with the system so it can be considered a security vulnerability - but for development this should not be an issue, later on we will define the http priviledges more securely.\\
 
 For testing sudoers: 
 
-\consoleCommand{sudo -u http sudo whoami}
+\consolecommand{sudo -u http sudo whoami}
 
 If it returns \importantKeyword{root} then you are all set.\\
 
@@ -153,6 +153,6 @@ This should provide you with a working webbased GUI.\\
 
 \textbf{Note :} \importantKeyword{lighttpd} does not start automatically when the AXIOM Beta boots, this still needs to be configured: 
 
-\consoleCommand{systemctl enable lighttpd}
+\consolecommand{systemctl enable lighttpd}
 
 \textbf{Note also:} Opening any websites that read image sensor registers before initializing the image sensor \importantKeyword{kick\_manual.sh} will freeze/crash the camera. 

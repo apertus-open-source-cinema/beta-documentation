@@ -11,11 +11,11 @@ Converts a video file recorded in AXIOM raw to a PGM image sequence and applies 
 
 Currently clips must go through ffmpeg before hdmi4k can read them:\\ 
 
-\consoleCommand{ffmpeg -i CLIP.MOV -c:v copy OUTPUT.MOV}
+\consolecommand{ffmpeg -i CLIP.MOV -c:v copy OUTPUT.MOV}
 
 To cut out a video between IN and OUT with ffmpeg but maintaing the original encoding data:
 
-\consoleCommand{ffmpeg -i CLIP.MOV -ss IN\_SECONDS -t DURATION\_SECONDS -c:v copy OUTPUT.MOV}
+\consolecommand{ffmpeg -i CLIP.MOV -ss IN\_SECONDS -t DURATION\_SECONDS -c:v copy OUTPUT.MOV}
 
 
 \begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
@@ -143,7 +143,7 @@ Debug options:
                       
 Example:                       
 
-\consoleCommand{./raw2dng --fixrnt --pgm --black=120 frame\%05d.dng}
+\consolecommand{./raw2dng --fixrnt --pgm --black=120 frame\%05d.dng}
 
 \textbf{Compiling raw2dng}
 
@@ -151,12 +151,12 @@ Compiling raw2dng on a 64bit system requires the gcc-multilib package.
 
 \textbf{Ubuntu:} 
 
-    \consoleCommand{sudo apt-get install gcc-multilib}   
+    \consolecommand{sudo apt-get install gcc-multilib}   
     
     
 \textbf{openSUSE:}
 
-    \consoleCommand{sudo zypper install gcc-32bit libgomp1-32bit}  
+    \consolecommand{sudo zypper install gcc-32bit libgomp1-32bit}  
     
     
 \textbf{AXIOM Beta:}

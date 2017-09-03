@@ -14,15 +14,15 @@ Details for the sensor datasheet are on GitHub under \href{https://github.com/ap
 
 Read register 115 (which contains the analog gain settings): 
 
-\consoleCommand{cmv\_reg 115}
+\consolecommand{cmv\_reg 115}
 
 Return value:
-\consoleCommand{0x00} 
+\consolecommand{0x00} 
 
 Means we are currently operating at analog gain x1 = unity gain\\
 
 Set register 115 to gain x2: 
-\consoleCommand{cmv\_reg 115 1}
+\consolecommand{cmv\_reg 115 1}
 
 \subsection{Setting Exposure Time}
 
@@ -42,7 +42,7 @@ To set the exposure time use the cmv\_snap3 tool with -z parameter (this will te
 
 Set gain and related settings (ADC range and offsets). 
 
-\consoleCommand{
+\consolecommand{
     ./set_gain.sh 1 ^^J
     ./set_gain.sh 2 ^^J
     ./set_gain.sh 3/3 # almost the same as gain 1 ^^J
