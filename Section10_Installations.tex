@@ -14,19 +14,19 @@ Make sure the AXIOM Beta is connected to the internet and then on the commandlin
 
 Update mirrors database: 
 
-\consolecommand{pacman -Syy}
+\consoleCommand{pacman -Syy}
 
 Install webserver: 
 
-\consolecommand{pacman -S lighttpd php php-cgi}
+\consoleCommand{pacman -S lighttpd php php-cgi}
 
 Start the webservice: 
 
-\consolecommand{systemctl start lighttpd}
+\consoleCommand{systemctl start lighttpd}
 
 Write any pending changes to the file system:
 
-\consolecommand{sync}
+\consoleCommand{sync}
 
 
 
@@ -36,84 +36,84 @@ Write any pending changes to the file system:
 
 This follows the guide from the lighttpd archlinux wiki page: \href{https://wiki.archlinux.org/index.php/lighttpd}{https://wiki.archlinux.org/index.php/lighttpd}
 
-\consolecommand{    mkdir /etc/lighttpd/conf.d/
+\consoleCommand{    mkdir /etc/lighttpd/conf.d/
     nano /etc/lighttpd/conf.d/cgi.conf}
     
 ... and place the following content in the file: 
 
-\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
-    server.modules += ( "mod\_cgi" )
-     
-     cgi.assign                 = ( ".pl"  => "/usr/bin/perl",
-                                   ".cgi" => "/usr/bin/perl",
-                                   ".rb"  => "/usr/bin/ruby",
-                                   ".erb" => "/usr/bin/eruby",
-                                   ".py"  => "/usr/bin/python",
-                                   ".php" => "/usr/bin/php-cgi" )
-     
-     index-file.names           += ( "index.pl",   "default.pl",
-                                   "index.rb",   "default.rb",
-                                   "index.erb",  "default.erb",
-                                   "index.py",   "default.py",
-                                   "index.php",  "default.php" )
-\end{lstlisting}    
+\consoleCommand{
+	server.modules += ( "mod\_cgi" )^^J
+	^^J
+	cgi.assign = (".pl"  => "/usr/bin/perl",^^J
+					".cgi" => "/usr/bin/perl",^^J
+                  ".rb"  => "/usr/bin/ruby",^^J
+                  ".erb" => "/usr/bin/eruby",^^J
+                  ".py"  => "/usr/bin/python",^^J
+                  ".php" => "/usr/bin/php-cgi")^^J
+	^^J     
+	index-file.names += ("index.pl",   "default.pl",^^J
+                         "index.rb",   "default.rb",^^J
+                         "index.erb",  "default.erb",^^J
+                         "index.py",   "default.py",^^J
+                         "index.php",  "default.php")^^J
+}  
 
 For PHP scripts you will need to make sure the following is set in /etc/php/php.ini 
 
-\consolecommand{cgi.fix\_pathinfo = 1}
+\consoleCommand{cgi.fix\_pathinfo = 1}
 
 In your Lighttpd configuration file, /etc/lighttpd/lighttpd.conf add: 
 
-\consolecommand{include "conf.d/cgi.conf"}
+\consoleCommand{include "conf.d/cgi.conf"}
 
 Create a new configuration file /etc/lighttpd/conf.d/fastcgi.conf 
 
-\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
-    # Make sure to install php and php-cgi. See:                                                             
-    # https://wiki.archlinux.org/index.php/Fastcgi\_and\_lighttpd#PHP
-     
-    server.modules += ("mod_fastcgi")
-     
-    # FCGI server
-    # ===========
-    #
-    # Configure a FastCGI server which handles PHP requests.
-    #
-    index-file.names += ("index.php")
-    fastcgi.server = ( 
-        # Load-balance requests for this path...
-        ".php" => (
-            # ... among the following FastCGI servers. The string naming each
-            # server is just a label used in the logs to identify the server.
-            "localhost" => ( 
-                "bin-path" => "/usr/bin/php-cgi",
-                "socket" => "/tmp/php-fastcgi.sock",
-                # breaks SCRIPT\_FILENAME in a way that PHP can extract PATH\_INFO
-                # from it 
-                "broken-scriptfilename" => "enable",
-                # Launch (max-procs + (max-procs * PHP_FCGI\_CHILDREN)) procs, where
-                # max-procs are "watchers" and the rest are "workers". See:
-                # https://redmine.lighttpd.net/projects/1/wiki/frequentlyaskedquestions#How-many-php-CGI-processes-will-lighttpd-spawn 
-                "max-procs" => 4, # default value
-                "bin-environment" => (
-                    "PHP\_FCGI\_CHILDREN" => "1" # default value
-                )
-            )
-        )   
-    )
-\end{lstlisting} 
+\consoleScript{
+    # Make sure to install php and php-cgi. See:^^J                                                             
+    # https://wiki.archlinux.org/index.php/Fastcgi\_and\_lighttpd#PHP^^J
+     ^^J
+    server.modules += ("mod\_fastcgi")^^J
+     ^^J
+    # FCGI server^^J
+    # ===========^^J
+    #^^J
+    # Configure a FastCGI server which handles PHP requests.^^J
+    #^^J
+    index-file.names += ("index.php")^^J
+    fastcgi.server = ( ^^J
+        # Load-balance requests for this path...^^J
+        ".php" => (^^J
+            # ... among the following FastCGI servers. The string naming each^^J
+            # server is just a label used in the logs to identify the server.^^J
+            "localhost" => ( ^^J
+                "bin-path" => "/usr/bin/php-cgi",^^J
+                "socket" => "/tmp/php-fastcgi.sock",^^J
+                # breaks SCRIPT\_FILENAME in a way that PHP can extract PATH\_INFO^^J
+                # from it ^^J
+                "broken-scriptfilename" => "enable",^^J
+                # Launch (max-procs + (max-procs * PHP\_FCGI\_CHILDREN)) procs, where^^J
+                # max-procs are "watchers" and the rest are "workers". See:^^J
+                #^^J https://redmine.lighttpd.net/projects/1/wiki/frequentlyaskedquestions#How-many-php-CGI-processes-will-lighttpd-spawn ^^J
+                "max-procs" => 4, # default value^^J
+                "bin-environment" => (^^J
+                    "PHP\_FCGI\_CHILDREN" => "1" # default value^^J
+                )^^J
+            )^^J
+        )   ^^J
+    )^^J
+}
 
 Make lighttpd use the new configuration file /etc/lighttpd/lighttpd.conf 
 
-\consolecommand{include "conf.d/fastcgi.conf"}
+\consoleCommand{include "conf.d/fastcgi.conf"}
 
 Restart lighttpd: 
 
-\consolecommand{systemctl restart lighttpd}
+\consoleCommand{systemctl restart lighttpd}
 
 To test php create a file: /src/http/index.php with content:
 
-\consolecommand{    <?php
+\consoleCommand{    <?php
     phpinfo();
     ?>} 
     
@@ -135,17 +135,17 @@ Download this repository - \href{https://github.com/apertus-open-source-cinema/b
 
 Under the line: 
 
-\consolecommand{root ALL=(ALL) ALL}
+\consoleCommand{root ALL=(ALL) ALL}
 
 Add:
 
-\consolecommand{http ALL=(ALL) NOPASSWD: ALL}
+\consoleCommand{http ALL=(ALL) NOPASSWD: ALL}
 
 This allows the http user to do anything with the system so it can be considered a security vulnerability - but for development this should not be an issue, later on we will define the http priviledges more securely.\\
 
 For testing sudoers: 
 
-\consolecommand{sudo -u http sudo whoami}
+\consoleCommand{sudo -u http sudo whoami}
 
 If it returns \importantKeyword{root} then you are all set.\\
 
@@ -153,7 +153,7 @@ This should provide you with a working webbased GUI.\\
 
 \textbf{Note :} \importantKeyword{lighttpd} does not start automatically when the AXIOM Beta boots, this still needs to be configured: 
 
-\consolecommand{systemctl enable lighttpd}
+\consoleCommand{systemctl enable lighttpd}
 
 \textbf{Note also:} Opening any websites that read image sensor registers before initializing the image sensor \importantKeyword{kick\_manual.sh} will freeze/crash the camera. 
 
@@ -167,20 +167,20 @@ This should provide you with a working webbased GUI.\\
 
 Update all package definitions and the database from the Internet: 
 
-\consolecommand{pacman -Sy}
+\consoleCommand{pacman -Sy}
 
 \textbf{Important:} Careful with upgrading existing packages. For example the Kernel used in the AXIOM Beta is custom developed - if you upgrade Arch Linux to the latest off the shelf Kernel you will BRICK your camera firmware.\\
 
 \textbf{Install lighttp webserver on the Beta: }
 
-\consolecommand{pacman -S lighttpd}
+\consoleCommand{pacman -S lighttpd}
 
 Install PHP on the Beta: 
 
-\consolecommand{pacman -S php php-cgi}
+\consoleCommand{pacman -S php php-cgi}
 
-Follow these instructions: \href{https://wiki.archlinux.org/index.php/lighttpd#PHP}{https://wiki.archlinux.org/index.php/lighttpd#PHP}\\
+Follow these instructions: \href{https://wiki.archlinux.org/index.php/lighttpd#PHP}{https://wiki.archlinux.org/index.php/lighttpd\#PHP}
 
 Start the webserver: 
 
-\consolecommand{systemctl start lighttpd}
+\consoleCommand{systemctl start lighttpd}

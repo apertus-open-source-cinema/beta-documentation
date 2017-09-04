@@ -22,7 +22,7 @@ The entire camera firmware is stored on a Micro SD card plugged into the Microze
 
 1. Find out which device the micro SD card is: 
 
-\consolecommand{    cat /proc/partitions
+\consoleCommand{    cat /proc/partitions
     mount}
 
 ... should give you a list of all connected devices. Lets assume in our case that the card is /dev/sdc.\\
@@ -30,14 +30,14 @@ The entire camera firmware is stored on a Micro SD card plugged into the Microze
 
 2. Make sure the card is unmounted (all 3 partitions): 
 
-\consolecommand{    umount /dev/sdc1
+\consoleCommand{    umount /dev/sdc1
     umount /dev/sdc2
     umount /dev/sdc3t}
     
     
 3. clone the entire card to a file: 
 
-\consolecommand{ddrescue /dev/sdc sdimage.img sdimage.log}
+\consoleCommand{ddrescue /dev/sdc sdimage.img sdimage.log}
 
 Here is a guide that covers doing the same on Mac and Windows: \href{http://raspberrypi.stackexchange.com/questions/311/how-do-i-backup-my-raspberry-pi}{http://raspberrypi.stackexchange.com/questions/311/how-do-i-backup-my-raspberry-pi}
 
@@ -50,7 +50,7 @@ Here is a guide that covers doing the same on Mac and Windows: \href{http://rasp
 
 Again you need to know the device path of your sd card, then (assuming in our case its /dev/sdb) run:
 
-\consolecommand{sudo dd if=sdimage.img of=/dev/sdb bs=4M}
+\consoleCommand{sudo dd if=sdimage.img of=/dev/sdb bs=4M}
 
 
 

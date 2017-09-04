@@ -46,7 +46,7 @@ So, 16 dark frames will reduce the read noise in the dark frame by 2 stops, 64 f
 
 Okay, but how much noise will be added to the output image?\\
 
-Let's say the read noise stdev in one image is r, so a dark frame averaged from N frames will have noise \consolecommand{stdev = r/sqrt(N)}. Therefore, the noise in the output image will be: \consolecommand{sqrt(r^2 + r^2/N) = r * sqrt(1 + 1/N)}.\\
+Let's say the read noise stdev in one image is r, so a dark frame averaged from N frames will have noise \consoleCommand{stdev = r/sqrt(N)}. Therefore, the noise in the output image will be: \consoleCommand{sqrt(r^2 + r^2/N) = r * sqrt(1 + 1/N)}.\\
 
 Check it in octave:\\ 
 
@@ -110,11 +110,11 @@ Experimentally, we have found the dark frame changes with exposure at roughly 0.
 
 Command-line:
 
-\consolecommand{raw2dng *x1*.raw12 --calc-darkframe}
+\consoleCommand{raw2dng *x1*.raw12 --calc-darkframe}
 
 Example: a dark frame created from 256 exposures, between 1.2ms and 77ms, without using black reference columns. The image was adjusted (with a constant offset) to match a zero-length exposure, so calling it bias frame may be a good idea. If we use it to correct the individual dark frames, we should no longer see a variation in overall brightness. 
 
-\consolecommand{    Averaged 256 frames exposed from 1.19 to 76.79 ms.
+\consoleCommand{    Averaged 256 frames exposed from 1.19 to 76.79 ms.
     Dark current: 0.0653 DN/ms}
     
 Image sequence: bias frame, single dark frames at exposures 1.2, 6 and 77 ms, corrected with the bias frame and the (scalar) dark current average. All files scaled to show a range of 60 DN, but the master dark frame has a different offset than the others.     
@@ -154,7 +154,7 @@ So, rather than using a single scalar value (0.06 dn/ms/gain) for all pixels, we
 
 Command-line:\\
 
-\consolecommand{raw2dng *x1*.raw12 --calc-dcnuframe}
+\consoleCommand{raw2dng *x1*.raw12 --calc-dcnuframe}
 
 Example: bias frame (static offset) and dark current frame (exposure-dependent offset). Notice the bias frame looks quite similar to the previous one, but a little darker. The median value of the dark current frame is, unsurprisingly, 0.0645 DN/ms. 
 
@@ -317,7 +317,7 @@ These operations should be simple enough to be implemented in FPGA, as real-time
 
 Acquire 16 dark frames, gain x1, exposures between 1 and 50 ms, save them under the 'darkframes' subdirectory, then run: 
 
-\consolecommand{raw2dng darkframes/*x1*.raw12 --calc-darkframe --swap-lines}
+\consoleCommand{raw2dng darkframes/*x1*.raw12 --calc-darkframe --swap-lines}
 
 Result: darkframe-x1.pgm.\\
 
@@ -328,7 +328,7 @@ Repeat for other gains if needed.\\
 
 Acquire 256 dark frames, gain x1, exposures between 1 and 64 ms in linear increments (4 images at each setting), save them under the 'darkframes' subdirectory, then run: 
 
-\consolecommand{raw2dng darkframes/*x1*.raw12 --calc-dcnuframe --swap-lines}
+\consoleCommand{raw2dng darkframes/*x1*.raw12 --calc-dcnuframe --swap-lines}
 
 Result: darkframe-x1.pgm and dcnuframe-x1.pgm.\\
 
@@ -338,11 +338,11 @@ Repeat for other gains if needed. \\
 
 You can verify the calibration by rendering the same individual dark frames, this time corrected, to check the residuals. Or, even better, acquire a new set of dark frames at the same settings, and check those instead: 
 
-\consolecommand{raw2dng darkframes/*x1*.raw12 --check-darkframe --swap-lines}
+\consoleCommand{raw2dng darkframes/*x1*.raw12 --check-darkframe --swap-lines}
 
 You will see the average value, pixel noise and row/column noise levels (both absolute and relative to pixel noise) for each dark frame. Example:
 
-\consolecommand{    Average     : 127.48
+\consoleCommand{    Average     : 127.48
     Pixel noise : 2.48
     Row noise   : 0.61 (24.6%)
     Col noise   : 0.05 (2.2%)}
@@ -878,8 +878,8 @@ TODO: order is blue, green, red!
 
 Some attempts to reverse engineer the PLR high dynamic range mode from CMV12000.\\ 
 
-- 79: Number_slopes: 1,2,3.\\
-- 75-78: Exp_kp1, Exp_kp2: exposure times for highlights (same formula as Exp_time)\\
+- 79: Number\_slopes: 1,2,3.\\
+- 75-78: Exp\_kp1, Exp\_kp2: exposure times for highlights (same formula as Exp\_time)\\
 - 106: Vtfl2, Vtfl3: knee point locations (range: 0-63; units: unknown) \\
 
 
@@ -887,7 +887,7 @@ Some attempts to reverse engineer the PLR high dynamic range mode from CMV12000.
 
 I'll use an IT8 chart, exposed at 30 ms (normal exposure) and 100 ms (overexposed). A little dark in the lab today, but shouldn't be a big problem.\\
 
-To analyze the images, I'll use octave 4.0, compiled with \href[http://marcelojoeng.blogspot.co.uk/2012/11/compile-octave-using-1632-bits-colour.html}{16-bit image support}. The scripts should run in Matlab as well, with minimal changes.\\
+To analyze the images, I'll use octave 4.0, compiled with \href[http://marcelojoeng.blogspot.co.uk/2012/11/compile-octave-using-1632-bits-colour.html]{16-bit image support}. The scripts should run in Matlab as well, with minimal changes.\\
 
 \subsubsection{Linear exposures}
 
@@ -1074,9 +1074,9 @@ Let's go back to the scenario with constant Vtfl and variable exposure.
 \includegraphics[height=5cm]{images/100-x-32-plr-vs-30ms-lin}
 \end{center}
 
-Notice the knee point appears to move to the right with higher Exp_kp1 values. Why would this happen?\\
+Notice the knee point appears to move to the right with higher Exp\_kp1 values. Why would this happen?\\
 
-If we assume the knee point threshold (Vtfl2) is only monitored while we still have time to fully expose the second segment (Exp_kp1), we can imagine a model of the PLR exposure that looks like this:\\
+If we assume the knee point threshold (Vtfl2) is only monitored while we still have time to fully expose the second segment (Exp\_kp1), we can imagine a model of the PLR exposure that looks like this:\\
 
 \begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
     function y = plr\_model_0(x, exp\_time, vtfl\_thr, exp\_kp1)
@@ -1163,7 +1163,7 @@ Here we'll focus on identifying the response curves.\\
 
 eg: input range where the linear sensor response, and use that range to correct nonlinearities that occur outside this range (for example, with underexposure, overexposure, or by comparing a PLR mode with a regular exposure mode). This can be good enough for initial tests, but it has a major problem. \\
 
-Suppose we have a sensor with this response: \importantKeyword{y = (t*x)^2 }(where t is exposure time, x is radiance, x*t is the number of photons captured, and y is the sensor output value, all in arbitrary units). Let's expose two synthetic images from it, in octave: 
+Suppose we have a sensor with this response: \importantKeyword{y = (t*x)\^2 }(where t is exposure time, x is radiance, x*t is the number of photons captured, and y is the sensor output value, all in arbitrary units). Let's expose two synthetic images from it, in octave: 
 
 \begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
     x = linspace(0, 1, 1000);             % synthetic "image" with range from 0 to 1 (black to white)

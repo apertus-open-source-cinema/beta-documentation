@@ -11,11 +11,11 @@ Converts a video file recorded in AXIOM raw to a PGM image sequence and applies 
 
 Currently clips must go through ffmpeg before hdmi4k can read them:\\ 
 
-\consolecommand{ffmpeg -i CLIP.MOV -c:v copy OUTPUT.MOV}
+\consoleCommand{ffmpeg -i CLIP.MOV -c:v copy OUTPUT.MOV}
 
 To cut out a video between IN and OUT with ffmpeg but maintaing the original encoding data:
 
-\consolecommand{ffmpeg -i CLIP.MOV -ss IN\_SECONDS -t DURATION\_SECONDS -c:v copy OUTPUT.MOV}
+\consoleCommand{ffmpeg -i CLIP.MOV -ss IN\_SECONDS -t DURATION\_SECONDS -c:v copy OUTPUT.MOV}
 
 
 \begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
@@ -43,107 +43,18 @@ To cut out a video between IN and OUT with ffmpeg but maintaing the original enc
 
 Converts AXIOM Beta raw image to DNG. 
 
-   
-\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
-DNG converter for Apertus .raw12 files
- 
-Usage:
-  ./raw2dng input.raw12 [input2.raw12] [options]
-  cat input.raw12 | ./raw2dng output.dng [options]
- 
-Flat field correction:
- - for each gain (N=1,2,3,4), you may use the following reference images:
- - darkframe-xN.pgm will be subtracted (data is x8 + 1024)
- - dcnuframe-xN.pgm will be multiplied by exposure and subtracted (x8192 + 8192)
- - gainframe-xN.pgm will be multiplied (1.0 = 16384)
- - clipframe-xN.pgm will be subtracted from highlights (x8)
- - reference images are 16-bit PGM, in the current directory
- - they are optional, but gain/clip frames require a dark frame
- - black ref columns will also be subtracted if you use a dark frame.
- 
-Creating reference images:
- - dark frames: average as many as practical, for each gain setting,
-   with exposures ranging from around 1ms to 50ms:
-        raw2dng --calc-darkframe *-gainx1-*.raw12 
- - DCNU (dark current nonuniformity) frames: similar to dark frames,
-   just take a lot more images to get a good fit (use 256 as a starting point):
-        raw2dng --calc-dcnuframe *-gainx1-*.raw12 
-   (note: the above will compute BOTH a dark frame and a dark current frame)
- - gain frames: average as many as practical, for each gain setting,
-   with a normally exposed blank OOF wall as target, or without lens
-   (currently used for pattern noise reduction only):
-        raw2dng --calc-gainframe *-gainx1-*.raw12 
- - clip frames: average as many as practical, for each gain setting,
-   with a REALLY overexposed blank out-of-focus wall as target:
-        raw2dng --calc-clipframe *-gainx1-*.raw12 
- - Always compute these frames in the order listed here
-   (dark/dcnu frames, then gain frames (optional), then clip frames (optional).
- 
-General options:
---black=%d          : Set black level (default: 128)
-                      - negative values allowed
---white=%d          : Set white level (default: 4095)
-                      - if too high, you may get pink highlights
-                      - if too low, useful highlights may clip to white
---width=%d          : Set image width (default: 4096)
---height=%d         : Set image height
-                      - default: autodetect from file size
-                      - if input is stdin, default is 3072
---swap-lines        : Swap lines in the raw data
-                      - workaround for an old Beta bug
---hdmi              : Assume the input is a memory dump
-                      used for HDMI recording experiments
---pgm               : Expect 16-bit PGM input from stdin
- 
---lut               : Use a 1D LUT (lut-xN.spi1d, N=gain, OCIO-like)
- 
---totally-raw       : Copy the raw data without any manipulation
-                      - metadata and pixel reordering are allowed.
- 
-Pattern noise correction:
---rnfilter=1        : FIR filter for row noise correction from black columns
---rnfilter=2        : FIR filter for row noise correction from black columns
-                      and per-row median differences in green channels
---fixrn             : Fix row noise by image filtering (slow, guesswork)
---fixpn             : Fix row and column noise (SLOW, guesswork)
---fixrnt            : Temporal row noise fix (use with static backgrounds; recommended)
---fixpnt            : Temporal row/column noise fix (use with static backgrounds)
---no-blackcol-rn    : Disable row noise correction from black columns
-                      (they are still used to correct static offsets)
---no-blackcol-ff    : Disable fixed frequency correction in black columns
- 
-Flat field correction:
---dchp              : Measure hot pixels to scale dark current frame
---no-darkframe      : Disable dark frame (if darkframe-xN.pgm is present)
---no-dcnuframe      : Disable dark current frame (if dcnuframe-xN.pgm is present)
---no-gainframe      : Disable gain frame (if gainframe-xN.pgm is present)
---no-clipframe      : Disable clip frame (if clipframe-xN.pgm is present)
---no-blackcol       : Disable black reference column subtraction
-                      - enabled by default if a dark frame is used
-                      - reduces row noise and black level variations
---calc-darkframe    : Average a dark frame from all input files
---calc-dcnuframe    : Fit a dark frame (constant offset) and a dark current frame
-                      (exposure-dependent offset) from files with different exposures
-                      (starting point: 256 frames with exposures from 1 to 50 ms)
---calc-gainframe    : Average a gain frame (aka flat field frame)
---calc-clipframe    : Average a clip (overexposed) frame
---check-darkframe   : Check image quality indicators on a dark frame
- 
-Debug options:
---dump-regs         : Dump sensor registers from metadata block (no output DNG)
---fixpn-dbg-denoised: Pattern noise: show denoised image
---fixpn-dbg-noise   : Pattern noise: show noise image (original - denoised)
---fixpn-dbg-mask    : Pattern noise: show masked areas (edges and highlights)
---fixpn-dbg-col     : Pattern noise: debug columns (default: rows)
---export-rownoise   : Export row noise data to octave (rownoise\_data.m)
---get-pixel:%d,%d   : Extract one pixel from all input files, at given coordinates,
-                      and save it to pixel.csv, including metadata. Skips DNG output.
-\end{lstlisting}
-                       
-                      
+\begin{verbatim}
+Inhalt der Datei "Datei.Endung"
+23142511
+	dasas
+	dasdsa
+		21512fasf32
+		rw325tgs
+\end{verbatim}
+          
 Example:                       
 
-\consolecommand{./raw2dng --fixrnt --pgm --black=120 frame\%05d.dng}
+\consoleCommand{./raw2dng --fixrnt --pgm --black=120 frame\%05d.dng}
 
 \textbf{Compiling raw2dng}
 
@@ -151,12 +62,12 @@ Compiling raw2dng on a 64bit system requires the gcc-multilib package.
 
 \textbf{Ubuntu:} 
 
-    \consolecommand{sudo apt-get install gcc-multilib}   
+    \consoleCommand{sudo apt-get install gcc-multilib}   
     
     
 \textbf{openSUSE:}
 
-    \consolecommand{sudo zypper install gcc-32bit libgomp1-32bit}  
+    \consoleCommand{sudo zypper install gcc-32bit libgomp1-32bit}  
     
     
 \textbf{AXIOM Beta:}
