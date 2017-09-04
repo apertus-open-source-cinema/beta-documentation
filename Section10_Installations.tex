@@ -156,3 +156,30 @@ This should provide you with a working webbased GUI.\\
 \consolecommand{systemctl enable lighttpd}
 
 \textbf{Note also:} Opening any websites that read image sensor registers before initializing the image sensor \importantKeyword{kick\_manual.sh} will freeze/crash the camera. 
+
+
+
+
+
+
+\subsection{Packet Manager Pacman}
+
+Update all package definitions and the database from the Internet: 
+
+\consolecommand{pacman -Sy}
+
+\textbf{Important:} Careful with upgrading existing packages. For example the Kernel used in the AXIOM Beta is custom developed - if you upgrade Arch Linux to the latest off the shelf Kernel you will BRICK your camera firmware.\\
+
+\textbf{Install lighttp webserver on the Beta: }
+
+\consolecommand{pacman -S lighttpd}
+
+Install PHP on the Beta: 
+
+\consolecommand{pacman -S php php-cgi}
+
+Follow these instructions: \href{https://wiki.archlinux.org/index.php/lighttpd#PHP}{https://wiki.archlinux.org/index.php/lighttpd#PHP}\\
+
+Start the webserver: 
+
+\consolecommand{systemctl start lighttpd}
