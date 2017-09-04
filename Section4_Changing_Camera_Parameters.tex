@@ -42,15 +42,13 @@ To set the exposure time use the cmv\_snap3 tool with -z parameter (this will te
 
 Set gain and related settings (ADC range and offsets). 
 
-\consolecommand{
-    ./set_gain.sh 1 ^^J
-    ./set_gain.sh 2 ^^J
-    ./set_gain.sh 3/3 # almost the same as gain 1 ^^J
-    ./set_gain.sh 3 ^^J
-    ./set_gain.sh 4 ^^J
-}
-
-
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em]
+    ./set\_gain.sh 1 ^^J
+    ./set\_gain.sh 2 ^^J
+    ./set\_gain.sh 3/3 # almost the same as gain 1 ^^J
+    ./set\_gain.sh 3 ^^J
+    ./set\_gain.sh 4 ^^J
+\end{lstlisting}
 
 \subsection{Setting Gamma Values}
 
@@ -59,9 +57,8 @@ Set gain and related settings (ADC range and offsets).
 Set the gamma value: 
 
 \begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em]
-    ./gamma_conf.sh 0.4
-    ./gamma_conf.sh 0.9
-    ./gamma_conf.sh 1
-    ./gamma_conf.sh 2
+    ./gamma\_conf.sh 0.4
+    ./gamma\_conf.sh 0.9
+    ./gamma\_conf.sh 1
+    ./gamma\_conf.sh 2
 \end{lstlisting}
-
