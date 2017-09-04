@@ -1,0 +1,51 @@
+\section{Associated Use-cases}
+
+Overview text required.
+
+
+
+
+\subsection{Configuration for Photography}
+
+To increase the quality of created images it is highly recommended to do Factory Calibration of your AXIOM Beta first. See 6.3.1.2.\\
+
+
+
+
+\subsubsection{Calibration}
+
+\textbf{Compile raw2dng inside AXIOM Beta}\\
+
+1. Acquire the source files from \href{https://github.com/apertus-open-source-cinema/misc-tools-utilities/tree/master/raw2dng}{https://github.com/apertus-open-source-cinema/misc-tools-utilities/tree/master/raw2dng}.\\
+2. Copy files to AXIOM Beta.\\
+3. Run \importantKeyword{make} inside camera. \\
+
+\textbf{Install dcraw inside AXIOM Beta}\\
+
+\consolecommand{    pacman -Sy
+    pacman -S dcraw}
+    
+\textbf{Picture Snapping script}\\
+
+Download \href{https://github.com/apertus-open-source-cinema/beta-software/blob/master/beta-scripts/picture_snap.sh}{https://github.com/apertus-open-source-cinema/beta-software/blob/master/beta-scripts/picture_snap.sh}\\ 
+
+... to camera.\\
+
+Make it executeable:      
+
+\consolecommand{chmod +x picture\_snap.sh}
+
+
+
+\subsubsection{Operation}
+
+
+Picture snaps are saved in subfolders in the cameras \importantKeyword{/opt/picture-snap/} directory.\\
+
+The script automatically names each subfolder and image by a timestamp: \importantKeyword{%Y%m%d\_%H%M%S} .\\
+
+Execute the image snapping by providing the exposure time running eg.: 
+
+\consolecommand{./picture\_snap.sh 20ms}
+
+One complete capture process plus DNG & JPG conversion takes 18 seconds currently.\\
