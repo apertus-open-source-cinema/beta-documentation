@@ -46,7 +46,7 @@ So, 16 dark frames will reduce the read noise in the dark frame by 2 stops, 64 f
 
 Okay, but how much noise will be added to the output image?\\
 
-Let's say the read noise stdev in one image is r, so a dark frame averaged from N frames will have noise \consoleCommand{stdev = r/sqrt(N)}. Therefore, the noise in the output image will be: \consoleCommand{sqrt(r^2 + r^2/N) = r * sqrt(1 + 1/N)}.\\
+Let's say the read noise stdev in one image is r, so a dark frame averaged from N frames will have noise \consoleCommand{stdev = r/sqrt(N)}. Therefore, the noise in the output image will be: \consoleCommand{sqrt(r\^2 + r\^2/N) = r * sqrt(1 + 1/N)}.\\
 
 Check it in octave:\\ 
 
@@ -186,13 +186,13 @@ Let's correct all these 256 dark frames and check a few indicators: median, stde
 
 Dark frame + scalar dark current: 
 \begin{center}
-\includegraphics[height=5cm]{images/darkframe-check-x1-256-simple}
+%\includegraphics[height=5cm]{images/darkframe-check-x1-256-simple}
 \end{center}
 
 
 Dark frame + dark current frame:
 \begin{center}
-\includegraphics[height=5cm]{images/darkframe-check-x1-256-dcnu}
+%\includegraphics[height=5cm]{images/darkframe-check-x1-256-dcnu}
 \end{center}
 
 You may notice:\\
@@ -344,8 +344,8 @@ You will see the average value, pixel noise and row/column noise levels (both ab
 
 \consoleCommand{    Average     : 127.48
     Pixel noise : 2.48
-    Row noise   : 0.61 (24.6%)
-    Col noise   : 0.05 (2.2%)}
+    Row noise   : 0.61 (24.6\%)
+    Col noise   : 0.05 (2.2\%)}
     
 Using the reference frames to correct raw12 files.\\
 
@@ -353,7 +353,7 @@ Using the reference frames to correct raw12 files.\\
 2. Make sure your \importantKeyword{.raw12} images contain a metadata block.\\
 3. raw2dng will recognize the dark frames and use them for correcting your image. \\
    
-\consolecommand{    cp /path/to/darkframes/*-x[1-4].pgm .
+\consoleCommand{    cp /path/to/darkframes/*-x[1-4].pgm .
     raw2dng *.raw12 --swap-lines}
     
 \textbf{Note:} you need --swap-lines as an workaround for an old bug introduced in the Beta, but wasn't fixed yet in the FPGA.\\    
@@ -364,7 +364,7 @@ This is not exactly useful when dealing with multiple folders, so until we'll ha
 2. Make sure your .raw12 images contain a metadata block.\\
 3. Use paths when passing input files raw2dng (the output files will be saved in the same directory as the input file).\\
 
-\consolecommand{    cd /path/to/darkframes
+\consoleCommand{    cd /path/to/darkframes
     ls *.pgm
       darkframe-x1.pgm       dcnuframe-x1.pgm       ...
     raw2dng /path/to/images/*.raw12 --swap-lines}
@@ -402,7 +402,7 @@ Showing half-res image crops pushed by 4 stops (ufraw-batch --wb=auto --exposure
 
 \subsection{Pattern Noise}
 
-General info about pattern noise can be found here - \href{http://theory.uchicago.edu/~ejm/pix/20d/tests/noise/#patternnoise}{http://theory.uchicago.edu/~ejm/pix/20d/tests/noise/#patternnoise} \\
+General info about pattern noise can be found here - \href{http://theory.uchicago.edu/~ejm/pix/20d/tests/noise/#patternnoise}{http://theory.uchicago.edu/~ejm/pix/20d/tests/noise/\#patternnoise} \\
 
 The CMV12000 sensor suffers from dynamic row noise.\\
 
@@ -430,7 +430,7 @@ There are two ways to deal with this noise, after performing Black Calibration (
 
 \textbf{Reducing row noise using black reference columns}
 
-See \href{http://github.com/apertus-open-source-cinema/misc-tools-utilities/commit/48de47b2a544dc32bbd5a8fd7701bb44a31ea850#diff-624053a553f49c0036b4d31282e58b2fR301}{http://github.com/apertus-open-source-cinema/misc-tools-utilities/commit/48de47b2a544dc32bbd5a8fd7701bb44a31ea850#diff-624053a553f49c0036b4d31282e58b2fR301}
+See \href{http://github.com/apertus-open-source-cinema/misc-tools-utilities/commit/48de47b2a544dc32bbd5a8fd7701bb44a31ea850#diff-624053a553f49c0036b4d31282e58b2fR301}{http://github.com/apertus-open-source-cinema/misc-tools-utilities/commit/48de47b2a544dc32bbd5a8fd7701bb44a31ea850\#diff-624053a553f49c0036b4d31282e58b2fR301}
 
 The application note AN01 from CMOSIS says:\\
 
@@ -442,7 +442,7 @@ Kalman filter theory: \href{http://robocup.mi.fu-berlin.de/buch/kalman.pdf}{http
 
 From page 3, if we know how noisy our estimations are, the optimal weights are inversely proportional with the noise variances:\\
 
-\consolecommand{x\_optimal = (x1 * var(x2) + x2 * var(x1)) / (var(x1) + var(x2))} 
+\consoleCommand{x\_optimal = (x1 * var(x2) + x2 * var(x1)) / (var(x1) + var(x2))} 
 
 Here, let's say R = x1 is row noise (stdev = 1.6 at gain=x1) and x2 is black column noise. 
 
@@ -460,7 +460,7 @@ We want to find k that minimizes var(R - k*B).
     => k = var(x1)) / (var(x1) + var(x2).
 \end{lstlisting}
 
-In particular, for gain = x1, k = 1.6^2 / (1.6^2 + 1.3^2) = 0.6.\\
+In particular, for gain = x1, k = 1.6\^2 / (1.6\^2 + 1.3\^2) = 0.6.\\
 
 So, we don't have to simply subtract the black columns. Rather, we'll subtract the static offset (median value) first, and then, we'll subtract the remaining variations multiplied by 0.6 at gain=x1.\\
 
@@ -502,7 +502,7 @@ This gives a minor improvement (0.6 -> 0.5). \\
 
 The two green channels are expected to be nearly identical, except for high-frequency details like sharp edges. That means, if we take the median difference on each row, we expect to get zero. In practice, we get some nonzero values. We could try to see if there is any correlation between those green channel differences and our row noise.\\
 
-Let's extract only the green channels from an image: the result will be W x H/2. Let's define green_delta(lag) = row_median(green - circshift(green,-lag)). That means, from each green row, subtract some nearby green row, and take the median difference. We'll compute this at lags -2, -1, 1, 2, mapped to array indices 0, 1, 2, 3.\\
+Let's extract only the green channels from an image: the result will be W x H/2. Let's define green\_delta(lag) = row\_median(green - circshift(green,-lag)). That means, from each green row, subtract some nearby green row, and take the median difference. We'll compute this at lags -2, -1, 1, 2, mapped to array indices 0, 1, 2, 3.\\
 
 Linear regression gives an ugly FIR filter that looks like this: \\
 
@@ -603,7 +603,8 @@ Checking a single 10ms dark frame, corrected using 256 exposures between 1.2ms a
       Col noise   : 0.08 (2.5%)
 \end{lstlisting}
 
-\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em,     # dark current frame, use only static offsets from black columns
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+    # dark current frame, use only static offsets from black columns
     raw2dng *x1*.raw12 --calc-dcnuframe --swap-lines
     raw2dng blackframes-gainx1-offset2047-10ms-01.raw12 --swap-lines --no-blackcol-rn --check-darkframe
       Average     : 127.46
@@ -738,7 +739,7 @@ Corrected with dark frame and dark current only:\\
 Also corrected with black columns: 
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-smallp}
+%\includegraphics[height=5cm]{images/10ms+4-smallp}
 \end{center}
 
 Also corrected with \importantKeyword{--fixrn} 
@@ -794,7 +795,7 @@ The four stages are connected together that the offset of stage N is the output 
 
 For each channel that results in the following fomular: 
 
-\consolecommand{Ri = SUMj ((Ij + Aij) * Eij) + Oi} 
+\consoleCommand{Ri = SUMj ((Ij + Aij) * Eij) + Oi} 
 
 Which in other words mean the result of matrix \importantKeyword{Eij} multiplied with an input vector \importantKeyword{Ij + Aij} plus an offset vector \importantKeyword{Oi}.
 
@@ -804,9 +805,9 @@ All input/output register are tested for over/underflow and clipped to 12 bit (t
 
 \textbf{Setting/Getting Registers: }\\
 
-\consolecommand{. ./hdmi.func # load functions} 
+\consoleCommand{. ./hdmi.func # load functions} 
 
-\consolecommand{    mat\_reg 0 # Read value of register 0 = A0
+\consoleCommand{    mat\_reg 0 # Read value of register 0 = A0
     mat\_reg 0 1 # Sett value of register 0 (A0) to 1} 
     
 4x4 matrix coefficients (A0, A1, A2, A3, B0, B1, B2, B3, B4, C0, C1, C2, C3, D0, D1, D2, D3) are mapped to addresses 0 - 15. In registers 16 - 31 there are adjustment values and from 32 - 35 there are 4 offset values.\\
@@ -815,7 +816,7 @@ Input format per default is (R, G1, G2, B).\\
 
 All values of the 4x4 matrix can be set conveniently with this script:\\
 
-\consolecommand{./mat4\_conf.sh  A0 A1 A2 A3  B0 B1 B2 B3 B4  C0 C1 C2 C3  D0 D1 D2 D3    O1 O2 O3 O4}    
+\consoleCommand{./mat4\_conf.sh  A0 A1 A2 A3  B0 B1 B2 B3 B4  C0 C1 C2 C3  D0 D1 D2 D3    O1 O2 O3 O4}    
     
 Where the last quadruple is optional, it defaults to 0.\\
 
@@ -837,17 +838,17 @@ To set the 4x4 color conversion matrix, you can use the mat4\_conf.sh script:\\
 
 The default configuration: 
 
-\consolecommand{./mat4\_conf.sh  1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1  0 0 0 0 } 
+\consoleCommand{./mat4\_conf.sh  1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1  0 0 0 0 } 
 
 \textbf{Note:} In current AXIOM Beta firmware the mat4 order is changed and the default matrix is: 
 
-\consolecommand{./mat4\_conf.sh 0.3 0.3 0.3 0.3  0 0 0 1  0 0.42 0.42 0  1 0 0 0} 
+\consoleCommand{./mat4\_conf.sh 0.3 0.3 0.3 0.3  0 0 0 1  0 0.42 0.42 0  1 0 0 0} 
 
 This will be changed to reflect the documentation again soon.\\
 
 With the Blackmagic Video Assist (BMVA), a nicer matrix (ie better skin color, less greenish): 
 
-\consolecommand{./mat4\_conf.sh 0.3 0.3 0.3 0.3  0 0 0 1  0 0.3 0.3 0  1 0 0 0} 
+\consoleCommand{./mat4\_conf.sh 0.3 0.3 0.3 0.3  0 0 0 1  0 0.3 0.3 0  1 0 0 0} 
 
 This 4x4 conversion matrix is a very powerful tool and allows to do things like mixing color channels, reassigning channels, applying effects or doing white balancing.\\
 
@@ -887,7 +888,7 @@ Some attempts to reverse engineer the PLR high dynamic range mode from CMV12000.
 
 I'll use an IT8 chart, exposed at 30 ms (normal exposure) and 100 ms (overexposed). A little dark in the lab today, but shouldn't be a big problem.\\
 
-To analyze the images, I'll use octave 4.0, compiled with \href[http://marcelojoeng.blogspot.co.uk/2012/11/compile-octave-using-1632-bits-colour.html]{16-bit image support}. The scripts should run in Matlab as well, with minimal changes.\\
+To analyze the images, I'll use octave 4.0, compiled with \href{http://marcelojoeng.blogspot.co.uk/2012/11/compile-octave-using-1632-bits-colour.html}{16-bit image support}. The scripts should run in Matlab as well, with minimal changes.\\
 
 \subsubsection{Linear exposures}
 
@@ -929,7 +930,7 @@ Let's check if the clipping point is, indeed, where I say:
 
 \subsubsection{2-segment PLR exposures}
 
-Let's start with a 2-segment PLR exposure, 100ms/10ms, vtfl2=32. That means, Number_slopes = 2, Exp_time = 8072, Exp_kp1 = 805, Vtfl=96. 
+Let's start with a 2-segment PLR exposure, 100ms/10ms, vtfl2=32. That means, Number\_slopes = 2, Exp\_time = 8072, Exp\_kp1 = 805, Vtfl=96. 
 
 \begin{center}
 \includegraphics[height=5cm]{images/100ms-10ms-32}
@@ -1127,7 +1128,7 @@ Since the slope at \importantKeyword{exp\_kp1=0} doesn't depend on total exposur
 \includegraphics[height=5cm]{images/100-x-32-plr-vs-30ms-lin-model1}
 \end{center}
 
-Tuning parameters (trial and error): \importantKeyword{vtfl_thr = 850}, \importantKeyword{exp_leak = 2.5ms}.\\
+Tuning parameters (trial and error): \importantKeyword{vtfl\_thr = 850}, \importantKeyword{exp\_leak = 2.5ms}.\\
 
 Black level 128 (after subtracting black reference columns, dark frame and dark current nonuniformity). Reference frames obtained from fitting 256 dark frames taken at exposures from 1 to 64 ms, in 1 ms increments, 4 images at each exposure, with raw2dng --swap-lines --calc-dcnuframe *x1*.raw12.\\
 
@@ -1190,7 +1191,7 @@ This nonlinearity was pretty obvious, but subtler variations may be much more di
 Bracketed image of the grayscale line from an IT8 chart, 1...100ms in 1ms increments, exposure sequence executed 100 times, images at identical settings averaged. 
 
 \begin{center}
-\includegraphics[height=5cm]{images/it8-grayscale}
+%\includegraphics[height=5cm]{images/it8-grayscale}
 \end{center}
 
 \textbf{Existing algorithms}\\
@@ -1223,7 +1224,7 @@ Q: can this be used on bracketed images?\\
 
 \subsubsection{Custom algorithms}
 
-\paragraph{Median vs exposure}\\
+\paragraph{Median vs exposure}\mbox{}\\
 
 This assumes the exposure setting from the sensor is accurate, so the input signal that will be digitzed is proportional to number of photons (scene radiance multiplied by exposure time.\\
 
@@ -1306,7 +1307,7 @@ Since the test image was not perfectly uniform (since we didn't actually shoot a
 
 \subsubsection{WIP}
 
-\paragraph{Curves from grayscale IT8 reference data}\\
+\paragraph{Curves from grayscale IT8 reference data}\mbox{}\\
 
 Response curves can be also estimated from the IT8 reference data, which was (hopefully) measured with much better accuracy than what we can achieve with our current setup.\\
 
@@ -1328,7 +1329,7 @@ Solutions/workarounds:\\
 - We may be able to use the curve matching algorithm to account for these unwanted variations with exposure time.\\
 
  
-\paragraph{Correcting for nonuniform illumination}\\
+\paragraph{Correcting for nonuniform illumination}\mbox{}\\
 
 Sampling data from the edge of the chart (left) lets us correct for nonuniform illumination: one can either adjust the chart itself (right), or the reference data (preferred).\\
 
@@ -1368,7 +1369,7 @@ Plotting raw data vs reference values on IT8 gray swatches gives:\\
 
 In the left figure, the two grayscale lines from the IT8 chart diverge because of nonuniform illumination. After adjusting the reference data, the match is much better, though it's still not perfect (because we can't really measure the nonuniform illumination in the chart, other than by including it in the model when performing the color profiling step).\\
 
-\paragraph{Iterative procedure for estimating the response curve in the presence of nonuniform illumination}\\
+\paragraph{Iterative procedure for estimating the response curve in the presence of nonuniform illumination}\mbox{}\\
 
 - Initial estimation of response curve, from noisy data (because of nonuniform illumination).\\
 - Adjust the reference data from brightness on chart borders (use griddata to interpolate).\\
