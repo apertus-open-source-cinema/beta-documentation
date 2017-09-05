@@ -65,11 +65,11 @@ So, it seems that averaging a small number of dark frames will not introduce sig
 Example: one dark frame at 6ms x1 (same image as above), vs 4 darkframes at 6ms, averaged.\\
 
 \begin{center}
-\includegraphics[height=5cm]{images/blackframes-gainx1-offset2047-5ms-01}
+\includegraphics[height=12cm]{images/blackframes-gainx1-offset2047-5ms-01}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/darkavg-5ms}
+\includegraphics[height=12cm]{images/darkavg-5ms}
 \end{center}
 
 What about camera settings?\\
@@ -83,15 +83,15 @@ Luckily, the dependence on exposure appears to be linear, so we can take calibra
 Let's look at some dark frames: gain x1, exposures 1.2ms, 6ms and 78ms. Notice they get brighter as exposure increase.\\
 
 \begin{center}
-\includegraphics[height=5cm]{images/blackframes-gainx1-offset2047-1ms-01}
+\includegraphics[height=12cm]{images/blackframes-gainx1-offset2047-1ms-01}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/darkavg-5ms}
+\includegraphics[height=12cm]{images/darkavg-5ms}
 \end{center} 
 
 \begin{center}
-\includegraphics[height=5cm]{images/blackframes-gainx1-offset2047-64ms-01}
+\includegraphics[height=12cm]{images/blackframes-gainx1-offset2047-64ms-01}
 \end{center}
 
 The overall brightness in the dark frame changes with exposure in a linear fashion. We'll try to account for this in two ways: with a simple scalar value, and with a per-pixel correction.\\
@@ -121,19 +121,19 @@ Image sequence: bias frame, single dark frames at exposures 1.2, 6 and 77 ms, co
 
 
 \begin{center}
-\includegraphics[height=5cm]{images/darkframe-x1-no-blackcol-256}
+\includegraphics[height=12cm]{images/darkframe-x1-no-blackcol-256}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/blackframes-gainx1-offset2047-1ms-01-simple-darkframe-no-blackcol}
+\includegraphics[height=12cm]{images/blackframes-gainx1-offset2047-1ms-01-simple-darkframe-no-blackcol}
 \end{center} 
 
 \begin{center}
-\includegraphics[height=5cm]{images/blackframes-gainx1-offset2047-5ms-01-simple-darkframe-no-blackcol}
+\includegraphics[height=12cm]{images/blackframes-gainx1-offset2047-5ms-01-simple-darkframe-no-blackcol}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/blackframes-gainx1-offset2047-64ms-01-simple-darkframe-no-blackcol}
+\includegraphics[height=12cm]{images/blackframes-gainx1-offset2047-64ms-01-simple-darkframe-no-blackcol}
 \end{center}
 
 
@@ -159,25 +159,25 @@ Command-line:\\
 Example: bias frame (static offset) and dark current frame (exposure-dependent offset). Notice the bias frame looks quite similar to the previous one, but a little darker. The median value of the dark current frame is, unsurprisingly, 0.0645 DN/ms. 
 
 \begin{center}
-\includegraphics[height=5cm]{images/darkframe-x1-no-blackcol-darkcurrent-256}
+\includegraphics[height=12cm]{images/darkframe-x1-no-blackcol-darkcurrent-256}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/dcnuframe-x1-no-blackcol-darkcurrent-256}
+\includegraphics[height=12cm]{images/dcnuframe-x1-no-blackcol-darkcurrent-256}
 \end{center}
 
 Individual dark frames (1.2, 6 and 77 ms) adjusted with dark current nonuniformity: 
 
 \begin{center}
-\includegraphics[height=5cm]{images/blackframes-gainx1-offset2047-1ms-01-darkcurrent-no-blackcol}
+\includegraphics[height=12cm]{images/blackframes-gainx1-offset2047-1ms-01-darkcurrent-no-blackcol}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/blackframes-gainx1-offset2047-5ms-01-darkcurrent-no-blackcol}
+\includegraphics[height=12cm]{images/blackframes-gainx1-offset2047-5ms-01-darkcurrent-no-blackcol}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/blackframes-gainx1-offset2047-64ms-01-darkcurrent-no-blackcol}
+\includegraphics[height=12cm]{images/blackframes-gainx1-offset2047-64ms-01-darkcurrent-no-blackcol}
 \end{center}
 
 No obvious improvement in the test images, so why bother?\\
@@ -278,7 +278,7 @@ To check how well the images can be exposure-compensated, we could evaluate (and
 First metric checks the difference between the two images, where the darkest one was adjusted by scaling (gain) to match the brightest one. Second metric computes the ratio between the two images at each pixel, and checks its median value vs the expected value. Third one checks the variation of per-pixel ratios between the two images, in stops, ignoring the expected value - this metric could be useful if we suspect the exposure controls may not be accurate.\\
 
 \begin{center}
-\includegraphics[height=5cm]{images/black_check}
+\includegraphics[height=4cm]{images/black_check}
 \end{center}
 
 With all 3 methods, minimization indicates a black level of around 120-122 (expected 128), so there's still something missing with our calibration. This is confirmed by missing details in very dark areas (crushed blacks) on some sample images.\\ 
@@ -292,7 +292,7 @@ Who is right?\\
 The sensor also has a strange behavior - something we have called the "Black Hole" anomaly: in very dark areas, sensor output decreases with exposure time. This might give a clue for solving this mystery.\\
 
 \begin{center}
-\includegraphics[height=5cm]{images/blackhole}
+\includegraphics[height=11cm]{images/blackhole}
 \end{center}
 
 
@@ -382,19 +382,19 @@ Showing half-res image crops pushed by 4 stops (ufraw-batch --wb=auto --exposure
 \textbf{Note:} in the raw data, even and odd rows have different black offsets; that's why we have wrong colors. \\
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-totally-raw-crop}
+\includegraphics[height=11cm]{images/10ms+4-totally-raw-crop}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-no-blackcol-crop}
+\includegraphics[height=11cm]{images/10ms+4-no-blackcol-crop}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-darkcurrent-no-blackcol-crop}
+\includegraphics[height=11cm]{images/10ms+4-darkcurrent-no-blackcol-crop}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-darkcurrent-crop}
+\includegraphics[height=11cm]{images/10ms+4-darkcurrent-crop}
 \end{center}
 
 
@@ -411,11 +411,11 @@ That means, a scalar offset gets added to each row. The offset is not correlated
 One can observe this noise by looking at the difference between two images taken at identical settings. There are two main components that appear obvious in such a difference frame: random noise (per pixel, increases on brighter pixels) and row noise (per line). \\
 
 \begin{center}
-\includegraphics[height=5cm]{images/it8-gainx1-offset2047-20ms-01}
+\includegraphics[height=9cm]{images/it8-gainx1-offset2047-20ms-01}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/it8-gainx1-offset2047-20ms-01-minus-02-small}
+\includegraphics[height=9cm]{images/it8-gainx1-offset2047-20ms-01-minus-02-small}
 \end{center}
 
 
@@ -675,44 +675,44 @@ Showing half-res image crops pushed by 4 stops (ufraw-batch --wb=auto --exposure
 - Note: in the raw data, even and odd rows have different black offsets; that's why we have wrong colors.\\ 
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-totally-raw-crop}
+\includegraphics[height=10cm]{images/10ms+4-totally-raw-crop}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-no-blackcol-crop}
+\includegraphics[height=10cm]{images/10ms+4-no-blackcol-crop}
 \end{center}
 
 - Left: after dark frame, dark current and static offsets from black reference columns.\\
 - Right: after dark frame, dark current and black reference columns correction, without removing the fixed frequency component.\\
 
  \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-no-blackcol-rn-crop}
+\includegraphics[height=10cm]{images/10ms+4-no-blackcol-rn-crop}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-no-blackcol-ff-crop}
+\includegraphics[height=10cm]{images/10ms+4-no-blackcol-ff-crop}
 \end{center}
 
 - Left: after dark frame, dark current and black reference columns correction.\\
 - Right: after row noise reduction \importantKeyword{--fixrn} \\
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-crop}
+\includegraphics[height=10cm]{images/10ms+4-crop}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-fixrn-crop}
+\includegraphics[height=10cm]{images/10ms+4-fixrn-crop}
 \end{center}
 
 - Left: \importantKeyword{--rnfilter=1} \\
 - Right: \importantKeyword{--rnfilter=2} \\
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-rnfilter1-crop}
+\includegraphics[height=10cm]{images/10ms+4-rnfilter1-crop}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-rnfilter2-crop}
+\includegraphics[height=10cm]{images/10ms+4-rnfilter2-crop}
 \end{center}
 
 Algorithm internals for \importantKeyword{--fixrn}
@@ -721,11 +721,11 @@ Algorithm internals for \importantKeyword{--fixrn}
 - Right: noise image, revealing row noise. Black regions are from edges that were masked.\\ 
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-fixrn-dbg-denoised-crop}
+\includegraphics[height=10cm]{images/10ms+4-fixrn-dbg-denoised-crop}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-fixrn-dbg-noise-crop}
+\includegraphics[height=10cm]{images/10ms+4-fixrn-dbg-noise-crop}
 \end{center}
 
 \textbf{Downsized images}\\
@@ -733,25 +733,25 @@ Algorithm internals for \importantKeyword{--fixrn}
 Corrected with dark frame and dark current only:\\
  
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-no-blackcol-small}
+\includegraphics[height=8cm]{images/10ms+4-no-blackcol-small}
 \end{center}
 
 Also corrected with black columns: 
 
 \begin{center}
-%\includegraphics[height=5cm]{images/10ms+4-smallp}
+%\includegraphics[height=8cm]{images/10ms+4-smallp}
 \end{center}
 
 Also corrected with \importantKeyword{--fixrn} 
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-fixrn-small}
+\includegraphics[height=8cm]{images/10ms+4-fixrn-small}
 \end{center}
 
 Corrected with \importantKeyword{--rnfilter=2}
 
 \begin{center}
-\includegraphics[height=5cm]{images/10ms+4-rnfilter2-small}
+\includegraphics[height=8cm]{images/10ms+4-rnfilter2-small}
 \end{center}
 
 Larger images (half-res): \\
@@ -823,7 +823,7 @@ Where the last quadruple is optional, it defaults to 0.\\
 An RGB 3x3 matrix can easily be extended to a 4x4 matrix by using the coefficient for green and offsets twice or better to half both of the green coefficients and use the same value for both greens twice. \\    
     
 \begin{center}
-\includegraphics[height=5cm]{images/Eqn5}
+\includegraphics[height=2cm]{images/Eqn5}
 \end{center}
     
     
@@ -855,7 +855,7 @@ This 4x4 conversion matrix is a very powerful tool and allows to do things like 
 TODO: order is blue, green, red! 
 
 \begin{center}
-\includegraphics[height=5cm]{images/700px-Mat4-conf-illustration-01}
+\includegraphics[height=9cm]{images/700px-Mat4-conf-illustration-01}
 \end{center}
 
 4x4 Matrix Examples:
@@ -893,11 +893,11 @@ To analyze the images, I'll use octave 4.0, compiled with \href{http://marcelojo
 \subsubsection{Linear exposures}
 
 \begin{center}
-\includegraphics[height=5cm]{images/30ms-lin}
+\includegraphics[height=9cm]{images/30ms-lin}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-lin}
+\includegraphics[height=9cm]{images/100ms-lin}
 \end{center}
 
 Let's check if the first image is really exposed to the right, in octave.  
@@ -921,7 +921,7 @@ Let's check if the clipping point is, indeed, where I say:
 \end{lstlisting}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-vs-30ms-lin}
+\includegraphics[height=10cm]{images/100ms-vs-30ms-lin}
 \end{center}
 
 - This approximates (but it's not equal to!) the response curve without PLR.\\
@@ -933,7 +933,7 @@ Let's check if the clipping point is, indeed, where I say:
 Let's start with a 2-segment PLR exposure, 100ms/10ms, vtfl2=32. That means, Number\_slopes = 2, Exp\_time = 8072, Exp\_kp1 = 805, Vtfl=96. 
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-10ms-32}
+\includegraphics[height=9cm]{images/100ms-10ms-32}
 \end{center}
 
 Although the image may look a little overexposed at first sight (because of the magenta cast), the raw levels seem to be alright: 
@@ -956,7 +956,7 @@ Let's check our response curve approximation:
 \end{lstlisting}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100-10-32-plr-vs-30ms-lin}
+\includegraphics[height=10cm]{images/100-10-32-plr-vs-30ms-lin}
 \end{center}
 
 - The knee point isn't as sharp as in the datasheet.\\
@@ -968,37 +968,37 @@ Let's check our response curve approximation:
 Let's leave Vtfl constant and change exposure time for the second segment (0,1,5,10,20,35,50 ms). 
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-0ms-32-tiny}
+\includegraphics[height=8cm]{images/100ms-0ms-32-tiny}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-1ms-32-tiny}
+\includegraphics[height=8cm]{images/100ms-1ms-32-tiny}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-5ms-32-tiny}
+\includegraphics[height=8cm]{images/100ms-5ms-32-tiny}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-10ms-32-tiny}
+\includegraphics[height=8cm]{images/100ms-10ms-32-tiny}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-20ms-32-tiny}
+\includegraphics[height=8cm]{images/100ms-20ms-32-tiny}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-35ms-32-tiny}
+\includegraphics[height=8cm]{images/100ms-35ms-32-tiny}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-50ms-32-tiny}
+\includegraphics[height=8cm]{images/100ms-50ms-32-tiny}
 \end{center}
 
 Commands for plotting the "response curve" approximations are left as an exercise to the reader. Result: 
 
 \begin{center}
-\includegraphics[height=5cm]{images/100-x-32-plr-vs-30ms-lin}
+\includegraphics[height=10cm]{images/100-x-32-plr-vs-30ms-lin}
 \end{center}
 
 \subsubsection{Changing Vtfl}
@@ -1006,19 +1006,19 @@ Commands for plotting the "response curve" approximations are left as an exercis
 Now let's leave exposure time constant (100ms/1ms) and change Vtfl (off,0,8,16,24,32,40,48,56,63): 
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-1ms-00-tiny}
+\includegraphics[height=9cm]{images/100ms-1ms-00-tiny}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-1ms-0-tiny}
+\includegraphics[height=9cm]{images/100ms-1ms-0-tiny}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-1ms-8-tiny}
+\includegraphics[height=9cm]{images/100ms-1ms-8-tiny}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-1ms-16-tiny}
+\includegraphics[height=9cm]{images/100ms-1ms-16-tiny}
 \end{center}
 
 \begin{center}
@@ -1026,27 +1026,27 @@ Now let's leave exposure time constant (100ms/1ms) and change Vtfl (off,0,8,16,2
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-1ms-32-tiny}
+\includegraphics[height=9cm]{images/100ms-1ms-32-tiny}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-1ms-40-tiny}
+\includegraphics[height=9cm]{images/100ms-1ms-40-tiny}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-1ms-48-tiny}
+\includegraphics[height=9cm]{images/100ms-1ms-48-tiny}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-1ms-56-tiny}
+\includegraphics[height=9cm]{images/100ms-1ms-56-tiny}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100ms-1ms-63-tiny}
+\includegraphics[height=9cm]{images/100ms-1ms-63-tiny}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100-1-x-plr-vs-30ms-lin}
+\includegraphics[height=10cm]{images/100-1-x-plr-vs-30ms-lin}
 \end{center}
 
 \subsubsection{Changing Exp\_time}
@@ -1054,7 +1054,7 @@ Now let's leave exposure time constant (100ms/1ms) and change Vtfl (off,0,8,16,2
 Now let's leave \importantKeyword{Exp\_kp1} and \importantKeyword{Vtfl} constant (0ms/32) and change base exposure time (20,50,100,150 ms):\\
 
 \begin{center}
-\includegraphics[height=5cm]{images/x-0-32-plr-vs-30ms-lin}
+\includegraphics[height=10cm]{images/x-0-32-plr-vs-30ms-lin}
 \end{center}
 
 - There is a noticeable light leak in the second segment, but it doesn't seem to change with base exposure time.\\
@@ -1072,7 +1072,7 @@ As expected, these settings do not seem to have any noticeable effect when \impo
 Let's go back to the scenario with constant Vtfl and variable exposure. 
 
 \begin{center}
-\includegraphics[height=5cm]{images/100-x-32-plr-vs-30ms-lin}
+\includegraphics[height=10cm]{images/100-x-32-plr-vs-30ms-lin}
 \end{center}
 
 Notice the knee point appears to move to the right with higher Exp\_kp1 values. Why would this happen?\\
@@ -1103,7 +1103,7 @@ If we assume the knee point threshold (Vtfl2) is only monitored while we still h
 Let's see how it compares to our real data. \\
 
 \begin{center}
-\includegraphics[height=5cm]{images/100-x-32-plr-vs-30ms-lin-model0}
+\includegraphics[height=10cm]{images/100-x-32-plr-vs-30ms-lin-model0}
 \end{center}
 
 Notice the slopes of the second segment seem to be higher in the real data, compared to our model, as if the real exposure time would be a little higher.
@@ -1125,7 +1125,7 @@ Since the slope at \importantKeyword{exp\_kp1=0} doesn't depend on total exposur
 \end{lstlisting}
 
 \begin{center}
-\includegraphics[height=5cm]{images/100-x-32-plr-vs-30ms-lin-model1}
+\includegraphics[height=10cm]{images/100-x-32-plr-vs-30ms-lin-model1}
 \end{center}
 
 Tuning parameters (trial and error): \importantKeyword{vtfl\_thr = 850}, \importantKeyword{exp\_leak = 2.5ms}.\\
@@ -1208,7 +1208,7 @@ Bracketed image of the grayscale line from an IT8 chart, 1...100ms in 1ms increm
 \textbf{Robertson02 results}
 
 \begin{center}
-\includegraphics[height=5cm]{images/response-curve-pfs}
+\includegraphics[height=7cm]{images/response-curve-pfs}
 \end{center}
 
 These curves seem to indicate that our black level may be a little too high. Figure out why. \\
@@ -1231,11 +1231,11 @@ This assumes the exposure setting from the sensor is accurate, so the input sign
 Unfortunately, this method delivered inconsistent results (two experiments resulted in two different curves -
 
 \begin{center}
-\includegraphics[height=5cm]{images/curve-new}
+\includegraphics[height=8cm]{images/curve-new}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/curve-old}
+\includegraphics[height=8cm]{images/curve-old}
 \end{center}
 
 
@@ -1244,7 +1244,7 @@ Unfortunately, this method delivered inconsistent results (two experiments resul
 Here's an example showing how much the exposure setting can be trusted. Crop taken from a bracketed exposure (1,2,5,10,20,30 ms) repeated 700 times and averaged. Image from the figure is from the 30ms exposure.\\ 
 
 \begin{center}
-\includegraphics[height=5cm]{images/blackhole}
+\includegraphics[height=10cm]{images/blackhole}
 \end{center}
 
 That's right - when exposure time increases, very dark pixels become even darker.\\
@@ -1281,13 +1281,13 @@ Example (only a single line from the test images was used): \\
 Initial guess:\\
 
 \begin{center}
-\includegraphics[height=5cm]{images/response-curve-test-init}
+\includegraphics[height=7cm]{images/response-curve-test-init}
 \end{center}
 
 Second guess:\\
 
 \begin{center}
-\includegraphics[height=5cm]{images/response-curve-test}
+\includegraphics[height=7cm]{images/response-curve-test}
 \end{center}
 
 \textbf{Note:} The response looks a bit different from Robertson02. Who is right?\\
@@ -1334,21 +1334,21 @@ Solutions/workarounds:\\
 Sampling data from the edge of the chart (left) lets us correct for nonuniform illumination: one can either adjust the chart itself (right), or the reference data (preferred).\\
 
 \begin{center}
-\includegraphics[height=5cm]{images/it8_lum_sampling_areas}
+\includegraphics[height=9cm]{images/it8_lum_sampling_areas}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/it8_lum_correction}
+\includegraphics[height=9cm]{images/it8_lum_correction}
 \end{center}
 
 See also:\\
 
 \begin{center}
-\includegraphics[height=5cm]{images/it8_lum_correction_3d}
+\includegraphics[height=10cm]{images/it8_lum_correction_3d}
 \end{center}
 
 \begin{center}
-\includegraphics[height=5cm]{images/it8_lum_correction_2d}
+\includegraphics[height=10cm]{images/it8_lum_correction_2d}
 \end{center}
 
 Why it's better to adjust the reference data instead of chart pixels?\\
@@ -1364,7 +1364,7 @@ Why it's better to adjust the reference data instead of chart pixels?\\
 Plotting raw data vs reference values on IT8 gray swatches gives:\\
 
 \begin{center}
-\includegraphics[height=5cm]{images/it8_lum_check}
+\includegraphics[height=7cm]{images/it8_lum_check}
 \end{center}
 
 In the left figure, the two grayscale lines from the IT8 chart diverge because of nonuniform illumination. After adjusting the reference data, the match is much better, though it's still not perfect (because we can't really measure the nonuniform illumination in the chart, other than by including it in the model when performing the color profiling step).\\
