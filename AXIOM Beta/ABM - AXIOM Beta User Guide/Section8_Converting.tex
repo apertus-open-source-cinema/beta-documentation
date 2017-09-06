@@ -1,0 +1,79 @@
+\section{Converting}
+
+Overview text required.
+
+
+
+
+\subsection{RAW12 to PGM}
+
+Converts a video file recorded in AXIOM raw to a PGM image sequence and applies the darkframe (needs to be created beforehand).\\
+
+Currently clips must go through ffmpeg before hdmi4k can read them:\\ 
+
+\consoleCommand{ffmpeg -i CLIP.MOV -c:v copy OUTPUT.MOV}
+
+To cut out a video between IN and OUT with ffmpeg but maintaing the original encoding data:
+
+\consoleCommand{ffmpeg -i CLIP.MOV -ss IN\_SECONDS -t DURATION\_SECONDS -c:v copy OUTPUT.MOV}
+
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+	hdmi4k
+    HDMI RAW converter for Axiom BETA
+     
+    Usage:
+      ./hdmi4k clip.mov
+      raw2dng frame*.pgm [options]
+     
+    Calibration files:
+      hdmi-darkframe-A.ppm, hdmi-darkframe-B.ppm:
+      averaged dark frames from the HDMI recorder (even/odd frames)
+     
+    Options:
+    -                   : Output PGM to stdout (can be piped to raw2dng)
+    --3x3               : Use 3x3 filters to recover detail (default 5x5)
+    --skip              : Toggle skipping one frame (try if A/B autodetection fails)
+    --swap              : Swap A and B frames inside a frame pair (encoding bug?)
+    --onlyA             : Use data from A frames only (for bad takes)
+    --onlyB             : Use data from B frames only (for bad takes)
+\end{lstlisting}
+
+\subsection{RAW12 to DNG}
+
+Converts AXIOM Beta raw image to DNG. 
+
+\begin{verbatim}
+Inhalt der Datei "Datei.Endung"
+23142511
+	dasas
+	dasdsa
+		21512fasf32
+		rw325tgs
+\end{verbatim}
+          
+Example:                       
+
+\consoleCommand{./raw2dng --fixrnt --pgm --black=120 frame\%05d.dng}
+
+\textbf{Compiling raw2dng}
+
+Compiling raw2dng on a 64bit system requires the gcc-multilib package.
+
+\textbf{Ubuntu:} 
+
+    \consoleCommand{sudo apt-get install gcc-multilib}   
+    
+    
+\textbf{openSUSE:}
+
+    \consoleCommand{sudo zypper install gcc-32bit libgomp1-32bit}  
+    
+    
+\textbf{AXIOM Beta:}
+
+1. Acquire the source from \href{https://github.com/apertus-open-source-cinema/misc-tools-utilities/tree/master/raw2dng}{https://github.com/apertus-open-source-cinema/misc-tools-utilities/tree/master/raw2dng}.\\
+2. Copy files to AXIOM Beta.\\
+3. Remove \importantKeyword{-m32} from Makefile.\\
+4. Run \importantKeyword{make} inside camera.\\                     
+                      

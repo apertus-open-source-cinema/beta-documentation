@@ -1,0 +1,186 @@
+\section{Installations}
+
+Overview text required.
+
+
+
+
+
+\subsection{Installing a webserver}
+
+\textbf{Installing required packages}\\
+
+Make sure the AXIOM Beta is connected to the internet and then on the commandline:\\
+
+Update mirrors database: 
+
+\consoleCommand{pacman -Syy}
+
+Install webserver: 
+
+\consoleCommand{pacman -S lighttpd php php-cgi}
+
+Start the webservice: 
+
+\consoleCommand{systemctl start lighttpd}
+
+Write any pending changes to the file system:
+
+\consoleCommand{sync}
+
+
+
+
+
+\subsection{Configuring a webserver}
+
+This follows the guide from the lighttpd archlinux wiki page: \href{https://wiki.archlinux.org/index.php/lighttpd}{https://wiki.archlinux.org/index.php/lighttpd}
+
+\consoleCommand{    mkdir /etc/lighttpd/conf.d/
+    nano /etc/lighttpd/conf.d/cgi.conf}
+    
+... and place the following content in the file: 
+
+\consoleCommand{
+	server.modules += ( "mod\_cgi" )^^J
+	^^J
+	cgi.assign = (".pl"  => "/usr/bin/perl",^^J
+					".cgi" => "/usr/bin/perl",^^J
+                  ".rb"  => "/usr/bin/ruby",^^J
+                  ".erb" => "/usr/bin/eruby",^^J
+                  ".py"  => "/usr/bin/python",^^J
+                  ".php" => "/usr/bin/php-cgi")^^J
+	^^J     
+	index-file.names += ("index.pl",   "default.pl",^^J
+                         "index.rb",   "default.rb",^^J
+                         "index.erb",  "default.erb",^^J
+                         "index.py",   "default.py",^^J
+                         "index.php",  "default.php")^^J
+}  
+
+For PHP scripts you will need to make sure the following is set in /etc/php/php.ini 
+
+\consoleCommand{cgi.fix\_pathinfo = 1}
+
+In your Lighttpd configuration file, /etc/lighttpd/lighttpd.conf add: 
+
+\consoleCommand{include "conf.d/cgi.conf"}
+
+Create a new configuration file /etc/lighttpd/conf.d/fastcgi.conf 
+
+\consoleScript{
+    # Make sure to install php and php-cgi. See:^^J                                                             
+    # https://wiki.archlinux.org/index.php/Fastcgi\_and\_lighttpd#PHP^^J
+     ^^J
+    server.modules += ("mod\_fastcgi")^^J
+     ^^J
+    # FCGI server^^J
+    # ===========^^J
+    #^^J
+    # Configure a FastCGI server which handles PHP requests.^^J
+    #^^J
+    index-file.names += ("index.php")^^J
+    fastcgi.server = ( ^^J
+        # Load-balance requests for this path...^^J
+        ".php" => (^^J
+            # ... among the following FastCGI servers. The string naming each^^J
+            # server is just a label used in the logs to identify the server.^^J
+            "localhost" => ( ^^J
+                "bin-path" => "/usr/bin/php-cgi",^^J
+                "socket" => "/tmp/php-fastcgi.sock",^^J
+                # breaks SCRIPT\_FILENAME in a way that PHP can extract PATH\_INFO^^J
+                # from it ^^J
+                "broken-scriptfilename" => "enable",^^J
+                # Launch (max-procs + (max-procs * PHP\_FCGI\_CHILDREN)) procs, where^^J
+                # max-procs are "watchers" and the rest are "workers". See:^^J
+                #^^J https://redmine.lighttpd.net/projects/1/wiki/frequentlyaskedquestions#How-many-php-CGI-processes-will-lighttpd-spawn ^^J
+                "max-procs" => 4, # default value^^J
+                "bin-environment" => (^^J
+                    "PHP\_FCGI\_CHILDREN" => "1" # default value^^J
+                )^^J
+            )^^J
+        )   ^^J
+    )^^J
+}
+
+Make lighttpd use the new configuration file /etc/lighttpd/lighttpd.conf 
+
+\consoleCommand{include "conf.d/fastcgi.conf"}
+
+Restart lighttpd: 
+
+\consoleCommand{systemctl restart lighttpd}
+
+To test php create a file: /src/http/index.php with content:
+
+\consoleCommand{    <?php
+    phpinfo();
+    ?>} 
+    
+... and open this IP address of your AXIOM Beta in a browser. If you see the php info status page everything worked successfully.     
+
+
+
+
+
+
+\subsection{Installing AXIOM Beta Web GUI software}
+
+Download this repository - \href{https://github.com/apertus-open-source-cinema/beta-software}{https://github.com/apertus-open-source-cinema/beta-software}\\
+
+1. Copy all files from the http directory of the repository to your AXIOM Beta /srv/http/ directory.\\
+2. Copy all files from the beta-scripts directory of the repository to your AXIOM Beta /root/ directory.\\ 
+
+\textbf{Edit /etc/sudoers files:}\\
+
+Under the line: 
+
+\consoleCommand{root ALL=(ALL) ALL}
+
+Add:
+
+\consoleCommand{http ALL=(ALL) NOPASSWD: ALL}
+
+This allows the http user to do anything with the system so it can be considered a security vulnerability - but for development this should not be an issue, later on we will define the http priviledges more securely.\\
+
+For testing sudoers: 
+
+\consoleCommand{sudo -u http sudo whoami}
+
+If it returns \importantKeyword{root} then you are all set.\\
+
+This should provide you with a working webbased GUI.\\
+
+\textbf{Note :} \importantKeyword{lighttpd} does not start automatically when the AXIOM Beta boots, this still needs to be configured: 
+
+\consoleCommand{systemctl enable lighttpd}
+
+\textbf{Note also:} Opening any websites that read image sensor registers before initializing the image sensor \importantKeyword{kick\_manual.sh} will freeze/crash the camera. 
+
+
+
+
+
+
+
+\subsection{Packet Manager Pacman}
+
+Update all package definitions and the database from the Internet: 
+
+\consoleCommand{pacman -Sy}
+
+\textbf{Important:} Careful with upgrading existing packages. For example the Kernel used in the AXIOM Beta is custom developed - if you upgrade Arch Linux to the latest off the shelf Kernel you will BRICK your camera firmware.\\
+
+\textbf{Install lighttp webserver on the Beta: }
+
+\consoleCommand{pacman -S lighttpd}
+
+Install PHP on the Beta: 
+
+\consoleCommand{pacman -S php php-cgi}
+
+Follow these instructions: \href{https://wiki.archlinux.org/index.php/lighttpd#PHP}{https://wiki.archlinux.org/index.php/lighttpd\#PHP}
+
+Start the webserver: 
+
+\consoleCommand{systemctl start lighttpd}

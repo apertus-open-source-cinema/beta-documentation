@@ -1,0 +1,76 @@
+\section{Changing Camera Parameters}
+
+Some intro text required\\
+
+\subsection{Setting CMV12000 sensor registers}
+
+\textbf{cmv\_reg}
+
+Get and Set CMV12000 image sensor registers (CMV12000 sports 128x16 Bit registers).\\
+
+Details for the sensor datasheet are on GitHub under \href{https://github.com/apertus-open-source-cinema/beta-hardware/tree/master/Datasheets}{Datasheets}\\
+
+\textbf{Examples:}\\
+
+Read register 115 (which contains the analog gain settings): 
+
+\consoleCommand{cmv\_reg 115}
+
+Return value:
+\consoleCommand{0x00} 
+
+Means we are currently operating at analog gain x1 = unity gain\\
+
+Set register 115 to gain x2: 
+\consoleCommand{cmv\_reg 115 1}
+
+\subsection{Setting Exposure Time}
+
+To set the exposure time use the cmv\_snap3 tool with -z parameter (this will tell the software to not save the image): 
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em, aboveskip=2em]
+./cmv_snap3 -e 9.2ms -z
+\end{lstlisting}
+
+\textbf{Note:} The exposure time can be supplied in "s" (seconds), "ms" (milliseconds), "us" (microseconds) and "ns" (nanoseconds). Decimal values also work (eg. "15.5ms"). 
+
+
+
+\subsection{Setting gain value}
+
+\textbf{set\_gain.sh}\\
+
+Set gain and related settings (ADC range and offsets). 
+
+<<<<<<< Updated upstream
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em]
+    ./set\_gain.sh 1 ^^J
+    ./set\_gain.sh 2 ^^J
+    ./set\_gain.sh 3/3 # almost the same as gain 1 ^^J
+    ./set\_gain.sh 3 ^^J
+    ./set\_gain.sh 4 ^^J
+\end{lstlisting}
+=======
+\consoleCommand{
+    ./set_gain.sh 1 ^^J
+    ./set_gain.sh 2 ^^J
+    ./set_gain.sh 3/3 # almost the same as gain 1 ^^J
+    ./set_gain.sh 3 ^^J
+    ./set_gain.sh 4 ^^J
+}
+
+
+>>>>>>> Stashed changes
+
+\subsection{Setting Gamma Values}
+
+\textbf{gamma\_conf.sh}\\
+
+Set the gamma value: 
+
+\begin{lstlisting}[language=bash,morekeywords=$,keywordstyle=\bfseries,frame=none,xleftmargin=.25in,belowskip=2em]
+    ./gamma\_conf.sh 0.4
+    ./gamma\_conf.sh 0.9
+    ./gamma\_conf.sh 1
+    ./gamma\_conf.sh 2
+\end{lstlisting}
