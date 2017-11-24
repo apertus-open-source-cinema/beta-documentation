@@ -1,1 +1,2496 @@
+'''Preamble'''
 
+* For reading on project beginnings and history see AXIOM [https://wiki.apertus.org/index.php/AXIOM_Project_Background Project Background].
+* For an introduction to the camera's components see AXIOM Beta [https://wiki.apertus.org/index.php/AXIOM_Beta/Camera_Structure Camera Structure].
+* If you'd like to contribute towards software development then please see [[Mission Briefings]].
+* For sample still/video files, camera availability, socials and other important stuff see [[Useful Links]].
+
+----
+
+If you're a new user welcome to the community.
+
+The AXIOM Beta Manual (ABM) can be downloaded in pdf or tex and in various languages from [[AXIOM Beta/Manual/Versions]].
+
+If you know where you're going then use 'Contents' in the top right of this page to navigate directly to manual subsections in the drop-down.
+
+Should you experience difficulties or have a query then our preferred platform for conducting immediate communications is IRC. For guides and channel details see [[Join the Team]].
+
+In some instances the instructions we have prepared are written in a manor which can be easily followed by those who don't possess a deep technical knowledge. If you are an advanced creature please keep this in mind.
+
+Incidentals: 
+
+*Notes on Userspace: [https://www.archlinux.org/ Arch Linux] comes with [https://en.wikipedia.org/wiki/Systemd systemd], which has the advantage of incredibly fast boot processing. Standard tools such as sshd and [https://wiki.archlinux.org/index.php/Dhcpcd dhcpcd] have been pre-installed during camera assembly.
+* One solution to storing camera relevant parameters inside the camera and to provide access from most programming languages is to use a database like [http://en.wikipedia.org/wiki/Berkeley_DB Berkeley DB].
+
+----
+
+'''Internal -''' Making amendments both here and inside ABM on [https://github.com/apertus-open-source-cinema/beta-documentation/tree/master/AXIOM%20Beta/ABM%20-%20AXIOM%20Beta%20User%20Guide GitHub] is best practice / Use '''>>>> TODO''' to indicate "attention required" / Editing the page in full and navigating to the relevant section as opposed to editing sections directly will prevent breaks from occurring in the format / Re: Areas of research that are in their infancy - See [[Research Pending]] for items as yet unincorporated into ABM / Creating dedicated Wiki pages or threads in the [https://lab.apertus.org/home/ Lab] is preferable to using this page as a notepad.
+
+'''Warning -''' If you make amendments or additions to this page then be careful with title syntax as mistakes will throw its content numbering structure off.
+
+
+----
+
+
+=General Information=
+
+
+----
+
+
+==AXIOM Beta Connector Overview==
+
+'''>>>> TODO'''
+
+
+----
+
+
+==Mountpoints==
+
+'''>>>> TODO'''
+
+
+----
+
+
+==Accessories and Connected Devices==
+
+'''>>>> TODO'''
+
+
+----
+
+
+[[File:Side-01.jpg | 500px| thumb | 550px]]
+=Operating Basics=
+
+==Prepare Your AXIOM Beta Camera for Use==
+# Use a micro-USB cable to connect the camera's MicroZed development board (USB UART) to a computer. The MicroZed board is the rearmost, red PCB (There is another micro-USB socket on the Power Board, but that is the JTAG Interface).
+# Connect the ethernet port on the MicroZed to an ethernet port on your computer. You might have to use an ethernet adapter on newer, smaller machines which often come without a native ethernet port.
+# Connect the AC adapter to the camera's Power Board. (to power the camera off at a later point, you need not disconnect the adapter from the board but can just unplug the cord from the adapter.)
+
+
+The Beta requires two 5V inputs (one for the Microzed, one for the rest of the hardware). Each 5V supply should be able to provide at least 2-3A. The total power consumption in normal operation was measured to be around 10W. During boot up there are spikes of higher power consumption. Each camera ships with an external AC power supply that provides 5V and 6-8A. 
+
+
+----
+
+
+[[File:Command prompt.png | 200px| thumb | 200px]]
+==Prepare Your Computer for Use With Your Camera==
+
+To communicate with your AXIOM Beta camera you will send it instructions via your computer's command line.
+
+In case you have not worked with a shell (console, terminal) much or ever before, we have prepared detailed instructions to help you get you set up. The steps which need to be taken to prepare your machine sometimes differ between operating systems, so pick the ones that best apply to you(r system).
+
+'''Note:''' Dollar signs <code>$</code> placed in front of commands are not meant to be typed in, they denote the command line prompt (a signal indicating the computer is ready for user input). It is used in documentation to differentiate between commands and the output resulting from commands. The prompt might look different on your machine (e.g. an angled bracket <code>></code>) and be preceded by your user name, computer name or the name of the directory that you are currently inside.
+
+
+----
+
+
+===USB to UART Drivers===
+For the USB connection to work, you will need drivers for bridging USB to UART (USB to serial). Under Linux this works out of the box in most distributions, for other operating systems they [https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx can be downloaded] from e.g. Silicon Labs' website – pick the software provided for your OS and install it.
+
+
+----
+
+
+===Serial Console===
+The tool we recommend for connecting to the AXIOM Beta camera via serial port with Mac OS X or Linux is [http://linux.die.net/man/1/minicom minicom]; for connections from Windows machines, we have used [http://www.putty.org Putty].
+
+
+----
+
+
+====Linux Setup====
+
+Check if you already have minicom installed on your system by trying to run it:
+ $ minicom
+
+Your system will respond with a message like <code>bash: command not found: minicom</code> if it's not installed.
+
+'''Install minicom'''
+
+Install the minicom package like you'd install other software on your system – which could be via a GUI tool or using <code>aptitude</code> or <code>apt-get</code> (for wich you might need super-user rights), e.g.:
+ 
+ $ apt-get install minicom
+or
+ $ sudo apt-get install minicom
+
+
+----
+
+
+====Mac OS X Setup====
+
+You will want to have [http://brew.sh/ Homebrew] installed on your system to use <code>minicom</code> for serial communication as it's more convenient than using <code>screen</code>.
+
+'''Note:''' Homebrew is a package manager for Mac - a piece of software that helps you install other software on your Mac machine, particularly software which is readily available on Linux but which does not come in the form of Mac "applications" which you can download via your web browser and simply drop into your Applications folder.
+
+Open Terminal.app (or your preferred terminal emulator if you have another installed). Terminal can be found via e.g. Spotlight search or via the Finder menu: <code>Go &gt; Utilities &gt; Terminal.app</code>.
+
+Check if you already have brew installed by entering the brew command:
+ $ brew
+
+If you don't have Homebrew installed, your shell will reply with something like <code>bash: command not found: brew</code>. Otherwise, it will spit out a list of <code>brew</code> commands.
+
+
+'''Installing Homebrew'''
+
+To install Homebrew, go to the [http://brew.sh/ Homebrew] website and follow the install instructions there. You can simply copy the command used for installing Homebrew from their website and then paste it into your terminal.
+
+
+'''Installing minicom'''
+
+With brew installed, you want to install minicom:
+ $ brew install minicom 
+
+Homebrew will tell you if you already have minicom installed on your system (e.g. <code>Warning: minicom-2.7 already installed</code>), otherwise it will install it for you.
+
+
+----
+
+
+====minicom Configuration====
+
+Once you have minicom installed, you need to configure it in order to talk to the camera. You can either use the configuration file we prepared or configure it yourself, following these step-by-step instructions.
+
+
+'''Linux'''
+
+Go to the minicom setup page:
+
+<pre>$ minicom -s</pre>
+
+In the "Serial port setup" subpage, check that "Serial Device" 's name is the good one (usually /dev/ttyUSB0 on Linux) and check the baud rate (115200).
+
+
+'''Mac'''
+
+Download [[Media:Minirc.USB0_Mac.zip|the settings file for Mac]], unzip it and place it in the <code>etc</code> directory of your minicom install.
+
+The minicom installation can be found in the standard directory used by homebrew, <code>/usr/local/Cellar</code>, in a subdirectory based on the minicom version number, e.g. <code>/usr/local/Cellar/minicom/2.7/etc
+</code>.
+
+You can also use Homebrew's <code>info</code> command to find minicom on your hard disk:
+
+<pre>$ brew info minicom</pre>
+
+which will output general information on the installed package, including its install directory e.g.:
+
+<pre>
+minicom: stable 2.7 (bottled)
+Menu-driven communications program
+https://alioth.debian.org/projects/minicom/
+/usr/local/Cellar/minicom/2.7 (17 files, 346.6K) *
+  Poured from bottle on ...</pre>
+
+
+----
+
+
+===Serial Connection via USB===
+
+'''Note:''' You will not be able to use the terminal window you initiate the serial connection in for anything else (it needs to remain open while you access the camera), so it might make sense to open a separate window solely for this purpose.
+
+
+----
+
+
+==== Connect Using minicom ====
+
+With minicom installed and properly [[AXIOM_Beta/AXIOM_Beta_Manual#minicom_Configuration|configured]], all you need to do is run the following command to start it with the correct settings:
+
+<pre>$ minicom -8 USB0</pre>
+
+On successful connection, you will be prompted to enter user credentials (which are needed to log into the camera).
+
+If your terminal remains blank except for the minicom welcome screen/information about your connection settings, try pressing enter. If this still does not result in the prompt for user credentials – while testing, we discovered the ''initial'' connection with minicom does not always work – disconnect the camera from the power adapter, then reconnect it: in your minicom window you should now see the camera's operating system booting up, followed by the login prompt. (From then on, connecting with minicom should work smoothly and at most require you to press enter to make the login prompt appear.)
+
+The default credentials are:
+<pre>user: root
+password: beta</pre>
+
+
+'''Alternatives'''
+
+Before you can use any tool to initiate a serial connection with your Beta camera you need to know through which special device file it can be accessed.
+
+Once the Beta is connected and powered on (and you installed the necessary drivers), it gets listed as a USB device in the <code>/dev</code> directory of your file system, e.g.<br>
+<code>/dev/ttyUSB0</code> (on Linux)<br>or<br>
+<code>/dev/cu.SLAB_USBtoUART</code><br>
+<code>/dev/tty.SLAB_USBtoUART</code> (on Mac).
+
+You can use a command such as:
+<pre>$ ls -al /dev | grep -i usb</pre>
+to list all USB devices currently connected to your machine.
+
+
+----
+
+
+==== Connect Using screen ====
+
+To connect to the camera, use the command:
+<pre>$ screen file_path 115200</pre>
+
+where <code>file_path</code> is the full path to the special device file (e.g. <code>/dev/ttyUSB0</code> or <code>/dev/cu.SLAB_USBtoUART</code>).
+
+You might have to run the command with superuser rights, i.e.:
+<pre>$ sudo screen file_path 115200</pre>
+
+On successful connection, you will be prompted to enter user credentials needed for logging into the camera.<br>
+If your terminal remains blank, try pressing enter.
+
+The default credentials are:
+<pre>user: root
+password: beta</pre>
+
+
+----
+
+
+====Disconnect====
+To exit the camera's operating system, use:
+<pre>$ exit</pre>
+
+The result will be a logout message followed by a new login prompt.
+
+To suspend or quit your <code>screen</code> session (and return to your regular terminal window) use one of the following commands:
+<pre>CTRL+a CTRL+z</pre>
+<pre>CTRL+a CTRL+\</pre>
+
+
+----
+
+
+===Ethernet Connection Using SSH===
+
+
+====SSH Keys How-to For Linux and Mac====
+To access the AXIOM Beta via Ethernet – which is the preferred way to communicate with it and will also work remotely, from a machine which is not directly connected to the camera – authentication via SSH is required.
+
+If you have never created SSH keys before or need a refresher in order to create a new pair, see the How-to below.
+
+
+----
+
+
+=====Storage Location / Find Existing Keys=====
+
+'''Mac & Linux'''
+
+By default, the ssh directory is located at <code>~/.ssh</code>, and contains key files called <code>id_rsa</code> and <code>id_rsa.pub</code>, respectively. Check if the directory exists and already contains keys by listing its contents:
+
+<pre>$ ls -al ~/.ssh</pre>
+
+If the directory doesn't exist or is empty and you don't have your SSH keys stored elsewhere on your machine, follow the instructions for key creation 
+below.
+
+
+----
+
+
+=====SSH Key Creation=====
+
+Linux machines as well as new Macs usually come pre-installed with the tools you need for creating SSH keys. To start the key creation process, use the command:
+
+<pre>$ ssh-keygen -t rsa -b 4096 -C "yourname@yourmachine"</pre>
+
+Note: The <code>-C</code> argument is used to add a comment which can help indentify your key as yours/your machine's, which might come in handy once you use other computers to connect to your Beta camera. If you leave it out, your default username/hostname will be used (you can check with <code>$ echo "$(whoami)@$(hostname)"</code> either beforehand or in another Terminal window to find out what it is), though you can always change the comment part again later on.
+
+<br>
+You will be prompted for a file in which to save the keys. To use the default install location (recommended), just press Enter.
+
+Next, you will be asked to enter a passphrase. Using a passphrase means greater security, though you can continue without one by just pressing Enter. In either case you will be asked to confirm your passphrase (by re-entering it if you used one, or pressing Enter again in case you did not).
+
+Subsequently, your keys will be created and saved in the directory you specified (<code>~/.ssh</code> by default). You can have your machine print out your public key for you by using the command:
+
+<pre>$ cat ~/.ssh/id_rsa.pub</pre>
+
+The output will look approximately like this:
+
+<pre style="white-space: pre-wrap;">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCj8ZHA1ehuCwXvEzyG20Cv0SX1BZ9uyXvON4mDOJJHtG7WolOZG0QPYEPpNxUIFuuvYYl/ffNrV9v2cXyit28N28kqHprGlQK43r9poLACIU4BA6uFIFp5++tEsAiM0bCbQlExcZvxvQQONY8Slrl9/2kbEwFSnYdY9ORQxYsxB0gHAaDq8KFj6XQXZlyrLC46uoUDvF9DJOYmRBV/6gieWfPo3jaLS6S7mLICSB3jUK81ZD5D7IJrh1kifahmSyaui1kU4PxmmqdwPG8sFGhTsZTCavngYNzNaK1XhTeUppHblDuQUc6Z02K62Od6LMgk7khdrFlBrzpt5Yds3CztTiJ1PI1XKawhRLEMJe4ekXg+i+bz8vmuMiOrnzrK4U/GCs2a7pjx2mC4WBDd7xJKwYh9HMmLAT9l0VKH+BwEBJXq/0EqKDvMwpUn1h3HQey+Rcujf77IX+eSafyg762OKTRAniCSuhiH2jUWEzhj7cjTRIllxwXOBUUS6FtUYBUQ/sBE3bMmY85VMyF+6z6iiep7VZ9vBMNJtuol2k1wKsrrD3Finynr8gPqO2ghjK+ZvkxjgYANvV+gSvWVo2R8H1FUGA2pJegEkFNKONCyyd6xMWR5loh9NkG0UQpSk95kJH2q0QbaCrxLdPqqGY6UWp1zbXNMk33FeBv0XjjI+w== anne@farragut</pre>
+
+Note that in newer Ubuntu versions (tested with 16.04) it seems that the newly created key is not loaded by the keyserver until you manually run:
+
+<pre>$ ssh-add</pre>
+
+
+----
+
+
+====Get/Set IP Address====
+
+If your network has a DHCP server running somewhere (eg. router) the AXIOM Beta will receive an IP address automatically as soon as it is connected the network.
+
+Otherwise, you will have to set the Beta's IP address manually with the <code>ifconfig</code> command over the serial console (USB).
+
+
+----
+
+
+====IP Address Check====
+
+While connected to the AXIOM Beta via USB, you can use the command: 
+<pre>$ ip a l</pre>
+... to check whether the Beta is currently assigned an IP address. Find the entry which begins with <code>eth0</code> and check if it contains a line starting with <code>inet</code> followed by an IP address. If it does, this is the IP address the Beta can be reached at.
+
+Example output with no IP address assigned:
+<pre>1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 00:0a:35:00:01:26 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::20a:35ff:fe00:126/64 scope link 
+       valid_lft forever preferred_lft forever</pre>
+
+
+----
+
+
+====Set IP Address====
+
+If the IP address check is not successful – in that it does not produce an IP address you can connect to – you will have to set your Beta's IP address manually with the <code>ifconfig</code> command.
+
+While connected to the Beta, you can do that like so:
+<pre>$ ifconfig eth0 192.168.0.9/24 up</pre>
+
+It does not really matter which IP address you choose as long as it is one allowed for private use (e.g. addresses in the <code>192.168.x.x</code> range) and you make sure to use the <code>/24</code> prefix.
+Note that this will set the IP only until you reboot the camera - then the IP has to be set this same way. A more permanenty solution is using a router and connecting your camera and computer. Then the router assigns IPs using DHCP automatically.
+
+If you now use <code>$ ip a l</code> (again) to check for the camera's IP address, you should see the address you assigned listed after <code>inet</code>, e.g.:
+
+<pre>1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 00:0a:35:00:01:26 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.0.9/24 brd 192.168.0.255 scope global dynamic eth0
+       valid_lft 172739sec preferred_lft 172739sec
+    inet6 fe80::20a:35ff:fe00:126/64 scope link 
+       valid_lft forever preferred_lft forever
+</pre>
+
+
+----
+
+
+====Establish a Connection via Key====
+
+Now we have the network configured we need to copy over our SSH key to the Beta.
+
+While connected to the AXIOM Beta via USB, you can use the command: 
+
+ <code>cd ~/.ssh/
+ cp authorized_keys authorized_keys.orig</code>
+
+Strictly speaking the cp (copy) command isn't needed, but it's best practice to always make a copy of a file before editing it - just in case.
+
+The next command will be to add your SSH key to the SSH file which contains the information on who can log into it via SSH without a password.
+
+You will need to first copy (control/command c) - IMPORTANT, make sure that you copy the whole key but do not include the next/new line.
+
+Next, with the command below, you will add your key to the authorized_keys file.  The structure of the command below is:
+
+* echo - writes the text after it
+* [your key] - pastes (control/command v) your key, so do not type in [your key]!
+* > - overwrites the existing file and adds just this text
+* authorized_keys - make sure to spell this correctly.
+
+As a heads-up when you paste in your SSH key the terminal window may wrap the text in a way that it looks like a bit of a mess - this is normal and you can then carry on typing in the rest of the command.
+
+ <code>echo [yourkey] >> authorized_keys</code>
+
+Alternatively, you can use ssh-copy-id to do it. Don't forget to adapt the IP adress.
+
+ <code>ssh-copy-id root@192.168.0.9</code>
+
+Now you have added you key you can then try and ssh into the Beta.
+
+On your computer use the following command - note the IP address will be the one you set earlier, the one used below is just the example IP.
+
+ <code>ssh root@192.168.0.9</code>
+
+You should now see the following prompt if you have logged on successfully to the Beta.
+
+ <code>Last login: Fri Jun 10 15:12:17 2016
+ sourcing .bashrc ...
+ [root@beta ~]# </code>
+
+Congratulations, you have now set up the Beta's networking and SSH configuration.
+
+The minicom or screen method you used to connect is no longer needed.
+
+
+----
+
+
+====Password Based Authentication====
+If you do not want to use the public/private keypair authentication you can edit /etc/ssh/sshd_config and set
+ PasswordAuthentication yes
+ PermitRootLogin yes
+
+'''Note:''' This has the potential to be a security vulnerability (especially if you do not change the default credentials) and connect your Beta directly to the Internet.
+
+
+----
+
+
+===Start the Camera===
+
+As development of the Beta continues the camera will initialize all systems and train the sensor communication automatically when powered on, but for now you will have to manually start this yourself.
+
+Run the following command:
+
+ ./kick_manual.sh
+ 
+You will see a lot of output, the tail of it is below.
+
+ ..
+ mapped 0x8030C000+0x00004000 to 0x8030C000.
+ mapped 0x80000000+0x00400000 to 0xA6961000.
+ mapped 0x18000000+0x08000000 to 0x18000000.
+ read buffer = 0x18390200
+ selecting RFW [bus A] ...
+ found MXO2-1200HC [00000001001010111010000001000011]
+ [root@beta ~]# 
+
+If you look at the back of the camera you will now see a blue LED near the top flashing very fast - this indicates everything is now running.
+
+If you turn the camera off when you turn it back on you will need to re-run this command.
+
+
+----
+
+
+[[File:Beta-wifi.jpg  | 500px| thumb | 550px]]
+===WiFi Access Point Setup===
+
+
+Connecting a USB wifi dongle (that supports Soft-AP) to the AXIOM Beta USB port allows controlling the camera via wireless connection
+
+Check your wifi card:
+ ifconfig
+
+Turn on wifi card:
+ ifconfig wlan0 up
+
+Search wifi essid/hotspot name:
+ iwlist wlan0 scan
+
+Setting up Essid and password:
+
+WEP
+ iwconfig wlan0 essid "yourhotspotname" key yourpassword 
+
+ASCII
+ iwconfig wlan0 essid "yourhotspotname" key s:asciikey 
+
+WPA2 (tested and working)
+update mirrors database (it is required to connect to the Internet via Ethernet): 
+ pacman -Syy 
+
+install wpa_supplicant:
+ pacman -S wpa_supplicant
+
+Configuration with wpa_passphrase - https://wiki.archlinux.org/index.php/WPA_supplicant
+create basic configuration file
+MYSSID = name of your wireless network
+passphrase = password to connect to your wireless network
+ wpa_passphrase MYSSID passphrase > /etc/wpa_supplicant/example.conf
+
+ ip link set dev wlan0 up
+
+ wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/example.conf
+if nl80211 driver does not support the given hardware. The deprecated wext driver might still support the device:
+ wpa_supplicant -B -i wlan0 -D wext -c /etc/wpa_supplicant/example.conf
+
+ dhcpcd wlan0
+
+Autostart connect https://wiki.archlinux.org/index.php/netctl
+copy config from example:
+ cp /etc/netctl/example/wireless-wpa /etc/netctl/wireless-wpa
+
+edit the config for you network (interface/ESSID/key):
+ nano /etc/netctl/wireless-wpa
+
+First manually check that the profile can be started successfully with:
+ netctl start wireless-wpa 
+If the above command results in a failure, then use 
+ journalctl -xn 
+ netctl status profile 
+to obtain a more in depth explanation of the failure. (profile might already been started)
+
+Enable:
+ netctl enable wireless-wpa
+
+This will create and enable a systemd service that will start when the computer boots. Changes to the profile file will not propagate to the service file automatically. After such changes, it is necessary to reenable the profile:
+ netctl reenable wireless-wpa
+
+
+----
+
+
+=Writing Images=
+
+==Capture Still Images==
+
+For writing uncompressed full resolution full bitdepth raw image the AXIOM Beta uses a software called '''''cmv_snap3'''''.
+
+It is located in the /root/ directory and writes the images data directly to STDOUT.
+
+cmv_snap3 writes images in the [[RAW12]] format. Writing one image takes a few seconds depending on where the image is written to so this method is not viable for recording video footage other than timelapse.
+
+
+----
+
+
+===Parameters===
+
+
+The following parameters are available:
+
+ <nowiki>./cmv_snap3 -h
+This is ./cmv_snap3 V1.10
+options are:
+-h        print this help message
+-8        output 8 bit per pixel
+-2        output 12 bit per pixel
+-d        dump buffer memory
+-b        enable black columns
+-p        prime buffer memory
+-r        dump sensor registers
+-t        enable cmv test pattern
+-z        produce no data output
+-e <exp>  exposure times
+-v <exp>  exposure voltages
+-s <num>  shift values by <num>
+-S <val>  writer byte strobe
+-R <fil>  load sensor registers</nowiki>
+
+
+'''Examples'''
+
+Images can be written directly to the cameras internal micro SD card like this (10 milliseconds exposure time, 16bit):
+ ./cmv_snap3 -e 10ms > image.raw16
+
+Write image plus metadata (sensor configuration) to cameras internal micro SD card (20 milliseconds exposure time, 12bit):
+ ./cmv_snap3 -2 -r -e 20ms > image.raw12
+
+You can also use cmv_snap3 to change to exposure time (to 5 milliseconds in this example) without actually capturing an image, for the that -z parameter is used to not produce any data output:
+ ./cmv_snap3 -z -e 5ms
+
+
+That cmv_snap3 writes data to STDOUT makes it very versatile, we can for example capture images from and to a remote Linux machine connected to the Beta via Ethernet easily (lets assume the AXIOM Betas camera IP is set up as: 192.168.0.9 - SSH access has to be set up for this to work with a keypair)
+ ssh root@192.168.0.9 "./cmv_snap3 -2 -r -e 10ms" > snap.raw12
+
+To pipe the data into a file and display it at the same time with imagemagick on a remote machine:
+ ssh root@192.168.0.9 "./cmv_snap3 -2 -r -e 10ms" | tee snap.raw12 | display -size 4096x3072 -depth 12 gray:-
+
+Use imagemagick to convert raw12 file into a color preview image:
+ cat test.raw12 | convert \( -size 4096x3072 -depth 12 gray:- \) \( -clone 0 -crop -1-1 \) \( -clone 0 -crop -1+0 \) \( -clone 0 -crop +0-1 \) -sample 2048x1536 \( -clone 2,3 -average \) -delete 2,3 -swap 0,1 +swap -combine test_color.png
+
+With raw2dng compiled inside the camera you can capture images directly to DNG, without saving the raw12:
+
+ ./cmv_snap3 -2 -b -r -e 10ms | raw2dng snap.DNG
+
+'''Note:''' Supplying exposure time as parameter is required otherwise cmv_snap3 will not capture an image.
+The exposure time can be supplied in "s" (seconds), "ms" (milliseconds), "us" (microseconds) and "ns" (nanoseconds). Decimal values also work (eg. "15.5ms").
+
+
+----
+
+
+==Image Overlays==
+
+This section covers the mimg version 1.8 (see https://github.com/apertus-open-source-cinema/beta-software/tree/master/mimg), not the previous 1.6.
+
+AXIOM Beta features a full HD framebuffer that can be altered from the Linux userspace and is automatically "mixed" with the real time video from the image sensor on HDMI outputs.
+
+The overlay could also be used to draw live histograms/scopes/HUD or menus.
+
+The overlay in more recent firmware revisions supports alpha channel transparency.
+
+
+----
+
+
+===Internals===
+
+The raw memory image is saved the following way: <ch0/12bit><ch1/12bit><ch2/12bit><ch3/12bit><overlay/16bit>
+
+That means for every 4 sensels there is only one overlay pixel. Meaning while the CMV12000 image sensor is 4Kx3K the overlay is Full HD (1080p).
+
+
+----
+
+
+===Prepare Images===
+
+Convert 24bit PNG (1920x1080 pixels) with transparency to AXIOM Beta raw format:
+ convert input.png rgba:output.rgb
+
+'''Note:''' This image format is different from [[RAW12]] (See Section 8)
+
+
+----
+
+
+===mimg===
+
+''mimg'' is software running on the camera that's used to load/alter anything related to overlays or test images.
+
+Source Code: https://github.com/apertus-open-source-cinema/beta-software/tree/master/mimg
+
+ <nowiki>This is ./mimg V1.8
+options are:
+-h        print this help message
+-a        load all buffers
+-o        load as overlay
+-O        load as color overlay
+-r        load raw data
+-w        use word sized data
+-D <val>  image color depth
+-W <val>  image width
+-H <val>  image height
+-P <val>  uniform pixel color
+-T <val>  load test pattern
+-B <val>  memory mapping base
+-S <val>  memory mapping size
+-A <val>  memory mapping address</nowiki>
+
+
+'''Examples'''
+
+clear overlay:
+ ./mimg -a -o -P 0
+
+load monochrome overlay:
+ ./mimg -o -a file.raw
+
+load color overlay:
+ ./mimg -O -a file.raw
+
+enable overlay: 
+ gen_reg 11 0x0104F000
+
+disable overlay:
+ gen_reg 11 0x0004F000
+
+
+'''Old overlays'''
+
+Overlays for mimg 1.6 are not compatible anymore. You can use
+
+ convert -size 1920x1080 -depth 6 rgba:overlay_04.rgb overlay_04.png
+
+... to convert them to PNG before continuing with the preparation above.
+
+
+----
+
+
+=Changing Camera Parameters=
+
+==cmv_reg==
+Get and Set CMV12000 image sensor registers (CMV12000 sports 128x16 Bit registers).
+
+Details are in the sensor datasheet: https://github.com/apertus-open-source-cinema/beta-hardware/tree/master/Datasheets
+
+'''Examples:'''
+
+Read register 115 (which contains the analog gain settings):
+ cmv_reg 115
+
+Return value:
+ 0x00
+Means we are currently operating at analog gain x1 = unity gain
+
+Set register 115 to gain x2:
+ cmv_reg 115 1
+
+
+----
+
+
+==Setting Exposure Time==
+
+To set the exposure time use the cmv_snap3 tool with -z parameter (this will tell the software to not save the image):
+
+ ./cmv_snap3 -e 9.2ms -z
+
+Note: The exposure time can be supplied in "s" (seconds), "ms" (milliseconds), "us" (microseconds) and "ns" (nanoseconds). Decimal values also work (eg. "15.5ms").
+
+
+----
+
+
+==Setting Gain Values==
+
+'''set_gain.sh'''
+
+Set gain and related settings (ADC range and offsets).
+
+ ./set_gain.sh 1 
+ ./set_gain.sh 2
+ ./set_gain.sh 3/3 # almost the same as gain 1
+ ./set_gain.sh 3
+ ./set_gain.sh 4
+
+ ./set_gain.sh 1 **J
+ ./set_gain.sh 2 **J
+ ./set_gain.sh 3/3 # almost the same as gain 1 **J
+ ./set_gain.sh 3 **J
+ ./set_gain.sh 4 **J
+
+
+----
+
+
+==Setting Gamma Values==
+
+'''gamma_conf.sh'''
+
+Set the gamma value:
+
+ ./gamma_conf.sh 0.4
+ ./gamma_conf.sh 0.9
+ ./gamma_conf.sh 1
+ ./gamma_conf.sh 2
+
+
+----
+
+
+==mat4_conf.sh==
+
+Read the details about the [[Matrix Color Conversion]] math/implementation.
+
+To set the 4x4 color conversion matrix, you can use the mat4_conf.sh script:
+
+The default configuration:
+ ./mat4_conf.sh  1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1  0 0 0 0 
+'''
+Please note that in current AXIOM Beta firmware the mat4 order is changed and the default matrix is:
+ ./mat4_conf.sh 0.3 0.3 0.3 0.3  0 0 0 1  0 0.42 0.42 0  1 0 0 0
+This will be changed to reflect the documentation again soon.'''
+
+With the Black Magic Video Assist (BMVA), a nicer matrix (ie better skin color, less greenish):
+
+ ./mat4_conf.sh 0.3 0.3 0.3 0.3  0 0 0 1  0 0.3 0.3 0  1 0 0 0
+
+This 4x4 conversion matrix is a very powerful tool and allows to do things like mixing color channels, reassigning channels, applying effects or doing white balancing.
+
+TODO: order is blue, green, red!
+
+[[File:Mat4-conf-illustration-01.jpg | 700px]]
+
+
+'''4x4 Matrix Examples:'''
+
+ ./mat4_conf.sh  1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1    0 0 0 0   # unity matrix but not optimal as both green channels are processed separately
+ ./mat4_conf.sh  1 0 0 0  0 0.5 0.5 0  0 0.5 0.5 0  0 0 0 1    0 0 0 0   # the two green channels inside each 2x2 pixel block are averaged and output on both green pixels
+ ./mat4_conf.sh  0 0 0 1  0 1 0 0  0 0 1 0  1 0 0 0    0 0 0 0   # red and blue are swapped
+ ./mat4_conf.sh  1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1    0.5 0 0 0    # red 50% brigther
+ ./mat4_conf.sh  1 0 0 0  0 1 0 0  0 0 1 0  0 0 0 1.5    0 0 0 0    # blue multiplied with factor 1.5
+ ./mat4_conf.sh  .25 .25 .25 .25  .25 .25 .25 .25  .25 .25 .25 .25  .25 .25 .25 .25    0 0 0 0    # black/white
+ ./mat4_conf.sh  -1 0 0 0  0 -0.5 -0.5 0  0 -0.5 -0.5 0  0 0 0 -1    1 1 1 1    # negative
+
+
+----
+
+
+=Image metadata=
+
+The RAW12 is designed to contain native raw image sensor data for images written by the AXIOM Beta and can optionally also contain an image sensor registers dump (128 x 16bit, big endian) appened at the end of file.  
+
+The -r command indicates to include the sensor registers when capturing an image (See Section Capture Still Images):
+
+ ./cmv_snap3 -r -e 10ms > image.raw12
+
+Show metadata from a RAW12 file (without converting it):
+
+ raw2dng file.raw12 --dump-regs
+
+or, with metadatareader: https://github.com/apertus-open-source-cinema/misc-tools-utilities/tree/master/cmv12000-metadata-reader
+
+ cat image.raw12 | dd bs=256 skip=73728 | ./metadatareader
+
+Details about the meaning of all image sensor registers can be found in the image sensor datasheet: https://github.com/apertus-open-source-cinema/beta-hardware/tree/master/Datasheets
+
+
+----
+
+
+==Image Histogram Data==
+
+To read and output histogram data from the Beta's live image a tool called cmv_hist3 is available inside the AXIOM Beta.
+
+ ./cmv_hist3 -h                                                   
+
+This is ./cmv_hist3 V1.4  
+                                                      
+Options are:
+                                                                  
+ -h        print this help message                                               
+ -s        acquire snapshot                                                      
+ -b <num>  number of bins                                                        
+ -d <num>  decimation factor                                                     
+ -r <num>  number of rows                                                        
+ -C <prc>  center sample area                                                    
+ -B <val>  register mapping base                                                 
+ -S <val>  register mapping size
+
+The output in 12 bit mode (default) are values in 4096 lines and 4 columns (R, G, B, GB channels)
+
+
+----
+
+
+=Output=
+
+'''ToDo - Intro text'''
+
+
+----
+
+
+==Storage==
+
+Recording data from the AXIOM Beta should be done externally.
+
+We created a special firmware for high speed recording which allows to record a burst of 4K 4:3 raw12 images camera-internally for about 1 second until the cameras RAM is full.
+
+Dual 6G SDI module is currently in development.
+
+'''Note:''' Compression could aid with packing more images (fps) into the available bandwidth (12 - 18Gbit/s) but also comes with some drawbacks. Research pending.
+
+
+'''Related:''' m.2 Sata
+
+m.2 (PCIe or 6G SATA) requires MGTs (Multi Gigabit Tranceivers) and complicated protocol stacks (PCIe, SATA) to work. As we don't have MGTs on the MicroZed, it is doable, but requires an additional high speed FPGA (e.g. Artix, Cyclone) and a lot of software. 
+
+
+----
+
+
+==HDMI==
+
+HDMI is a two-way communication protocol and supports a ton of different formats/frequencies/specs.
+Many monitors/recorders only support a subset of these formats and expect signals to conform to certain values. These values are not documented publicly so we are currently in the process of debugging device compatibility one by one. The good thing is that its a pure software thing and we can add support and test compatibility with additional devices as we go.
+
+In general we discovered that monitors are more flexible when it comes to HDMI (TMDS) freqencies as they just "tune" into (sync to) the provided clock/data rate. Recorders expect signals to be in a much more stricter/narrow range and will not work (show "no signal") if there is a minor deviation.
+
+Watch this 33C3 talk by Tim Ansell about "Discecting HDMI": https://media.ccc.de/v/33c3-8057-dissecting_hdmi to get insight into how HDMI works.
+
+
+----
+
+
+===External HDMI Recording===
+
+Settings for VSync, HSync, etc. inside the AXIOM Beta can be found in:
+ /root/gen_init.sh
+
+For example the Atomos SHOGUN was found to work with these HDMI parameters:
+
+ <nowiki>
+scn_reg  0 2200             # total_w
+scn_reg  1 1125             # total_h
+scn_reg  2   60             # total_f
+
+scn_reg  4  262             # hdisp_s
+scn_reg  5 2182             # hdisp_e
+scn_reg  6   45             # vdisp_s
+scn_reg  7 1125             # vdisp_e
+
+scn_reg  8    0             # hsync_s
+scn_reg  9 2100             # hsync_e
+scn_reg 10    4             # vsync_s
+scn_reg 11    9             # vsync_e
+
+scn_reg 32  252             # pream_s
+scn_reg 33  260             # guard_s
+scn_reg 34  294             # terc4_e
+scn_reg 35  296             # guard_e</nowiki>
+
+Currently it is not possible to alter TMDS and Clock frequencies from the userspace (requires new FPGA bitstream).
+
+For the firmware there are two modes available, the 30Hz and 60Hz variant. You can switch between them quite easily.
+
+cmv_hdmi3.bit is the FPGA bitstream loaded for the HDMI interface. We use symlinks to switch this file easily.
+
+Before doing this, don't forget to check if the files (cmv_hdmi3_60.bit or cmv_hdmi3_30.bit) really exist in the /root folder.
+
+The output is always in 8bpc RGB color space without subsampling (4:4:4). Not all capture devices can manage this.
+
+Other modes like YCrCb, etc. are currently not supported. 
+
+
+----
+
+
+====Devices Confirmed Working====
+
+
+'''Atomos Shogun'''
+
+AXIOM Beta supports up to 1080p60
+
+
+'''Atomos Ninja'''
+
+AXIOM Beta supports up to 1080p30
+
+[[File:AxiomBetaBMVA4K.jpg| thumb | 350px | Blackmagic Video Assist]]
+
+
+
+'''Blackmagic Video Assist and Video Assist 4K'''
+
+AXIOM Beta supports up to 1080p60
+
+
+Changes for Blackmagic Video Assist and Video Assist 4K, tested on firmware 2.3.1:
+
+'''edit setup.sh'''
+
+Add:
+
+ ./gen_init.sh 1080p60BMVA
+
+comment out any other ./gen_init.sh entries.'''
+
+
+'''edit gen_init.sh'''
+
+ <nowiki>
+</nowiki>'''Replace:'''<nowiki>
+  SHOGUN)
+</nowiki>'''With:'''<nowiki>
+  SHOGUN|1080p60BMVA|1080p30BMVA)
+
+</nowiki>'''Add the section below:'''<nowiki>
+  1080p50BMVA|1080p25BMVA)
+    scn_reg  0 2640             # total_w
+    scn_reg  1 1125             # total_h
+    scn_reg  2   60             # total_f
+
+    scn_reg  4  262             # hdisp_s
+    scn_reg  5 2182             # hdisp_e
+    scn_reg  6   45             # vdisp_s
+    scn_reg  7 1125             # vdisp_e
+
+    scn_reg  8    0             # hsync_s
+    scn_reg  9 2100             # hsync_e
+    scn_reg 10    4             # vsync_s
+    scn_reg 11    9             # vsync_e
+
+    scn_reg 32  252             # pream_s
+    scn_reg 33  260             # guard_s
+    scn_reg 34  294             # terc4_e
+    scn_reg 35  296             # guard_e
+    ;;
+
+  1080p24BMVA)
+    scn_reg  0 2750             # total_w
+    scn_reg  1 1125             # total_h
+    scn_reg  2   60             # total_f
+
+    scn_reg  4  262             # hdisp_s
+    scn_reg  5 2182             # hdisp_e
+    scn_reg  6   45             # vdisp_s
+    scn_reg  7 1125             # vdisp_e
+
+    scn_reg  8    0             # hsync_s
+    scn_reg  9 2100             # hsync_e
+    scn_reg 10    4             # vsync_s
+    scn_reg 11    9             # vsync_e
+
+    scn_reg 32  252             # pream_s
+    scn_reg 33  260             # guard_s
+    scn_reg 34  294             # terc4_e
+    scn_reg 35  296             # guard_e
+    ;;</nowiki>
+
+----
+
+===Experimental UHD Raw Recording===
+
+'''Note:''' This experimental raw mode works only in 1080p60 (A+B Frames) and is only tested with the Atomos Shogun currently.
+
+To measure the required compensations with a different recorder follow this guide: [[raw processing recorder benchmarking]]
+
+This mode requires darkframes which are created in the course of a camera [[Factory Calibration]]. Early Betas are not calibrated yet - this step needs to be completed by the user.
+
+
+----
+
+
+====Enable raw Recording Mode====
+
+Input:
+
+ ./hdmi_rectest.sh
+
+Inside that script the following command is worth noting:
+
+Enable experimental raw mode:
+ scn_reg 31 0x0A01
+
+Disable experimental raw mode:
+ scn_reg 31 0x0001
+
+
+if you get an error report like this:
+ <nowiki>Traceback (most recent call last):
+  File "rcn_darkframe.py", line 17, in <module>
+    import png
+ImportError: No module named 'png'</nowiki>
+
+Make sure the Beta is connected to the Internet via Ethernet and run:
+ pip install pypng
+
+
+----
+
+
+====Processing====
+
+Post-processing software to recover the raw information (DNG sequences) is on github: https://github.com/apertus-open-source-cinema/misc-tools-utilities/tree/master/raw-via-hdmi
+
+required packages: ffmpeg build-essentials
+
+Mac requirements for compiling: gcc4.9(via homebrew): 
+ brew install homebrew/versions/gcc49
+
+also install ffmpeg
+
+To do all the raw processing in one single command (after ffmpeg codec copy processing):
+ ./hdmi4k INPUT.MOV - | ./raw2dng --fixrnt --pgm --black=120 frame%05d.dng
+
+
+----
+
+
+=====Raw Processing Recorder Benchmarking=====
+
+We can analyze footage recorded by the third party recorders but we would need the following:
+
+* make sure your Beta is running in experimental 4k raw mode (1080p60 with A+B frames)
+* short HDMI captured clip from the 3rd party recorder
+* raw12 still image captured during the HDMI recording
+
+This kind of script is helpful to execute during HDMI recording:
+
+ <nowiki>#stop HDMI stream:
+fil_reg 15 0
+
+#capture image
+./cmv_snap3 -r -2 -e 10ms > image.raw12
+
+#start HDMI stream:
+fil_reg 15 0x01000100
+</nowiki>
+
+Taking a snapshot during HDMI recording with the above script will pause the HDMI stream for a few seconds, where it will alternate between two frames. These two frames will be from the same raw data as image.raw12, so they contain all that's needed to figure out what kind of processing the HDMI recorder applies to the image, and how to undo it in order to recover the raw data.
+
+Ideally, the scene should contain fine details (such as tissue, fine print) and rich colors. A color chart (which usually contains some fine print as well) is a very good choice.
+
+* HDMI captured 1-minute clip with dark frames (lens cap on camera, black cloth covering camera in a dark room)
+
+
+----
+
+
+=====Factory Calibration=====
+
+
+'''Note:''' Create a variable containing your Betas IP for easy access.
+
+ export BETA=192.168.1.101
+
+
+'''Preparations'''
+
+Install on your AXIOM Beta:
+ pacman -S python-numpy
+
+Install the following packages on your PC:
+ dcraw octave
+
+For Ubuntu this would look like:
+ sudo apt-get install dcraw octave
+
+Download and compile raw2dng on your PC: https://github.com/apertus-open-source-cinema/misc-tools-utilities/tree/master/raw2dng
+
+
+
+'''Step 1:''' Check range of the input signal
+
+On the Beta set gain to x1 by running:
+ ./set_gain.sh 1
+
+Download this Octave file to your PC into your current work directory:
+ wget https://raw.githubusercontent.com/apertus-open-source-cinema/misc-tools-utilities/master/darkframes/read_raw.m
+
+Capture an overexposed image with the Beta and check the levels:
+
+ ssh root@$BETA "./cmv_snap3 -2 -b -r -e 100ms" > snap.raw12
+ ./raw2dng snap.raw12 --totally-raw
+ octave
+    octave:1> a = read_raw('snap.DNG')
+    octave:2> prctile(a(:), [0.1 1 50 99 99.9])
+
+If everything worked you will get a wall of numbers now. TODO: We should extract the essential pieces of information here... (min/max maybe)?
+
+Lower numbers should be around 50...300 (certainly not zero). Higher numbers should be around 4000, but not 4095.
+
+Repeat for gains 2, 3, 4.
+
+Put this in startup script (ie: [[kick_manual.sh]]):
+ ./set_gain.sh 1
+
+
+
+'''Step 2:''' RCN calibration.
+
+RCN stands for Row Coloumn Noise correction meaning we filter out the fixed pattern noise.
+
+Make sure you have these scripts already in your Betas /root/ directly: https://github.com/apertus-open-source-cinema/beta-software/tree/master/software/scripts
+
+Clear the old RCN values:
+ ssh root@$BETA "./rcn_clear.py"
+
+Now you need to make sure that your Beta is not capturing any light (ideally not a single photon should hit the sensor):
+# close the lens aperture as far as possible
+# attach lens cap
+# put black lens bag over Beta
+# turn off all lights in the room - do this at night or in a completely dark room
+
+Take 64 dark frames at 10ms, gain x1 with the following script executed on your PC (1.2 GB needed):
+ 
+ ssh root@$BETA " ./set_gain.sh 1"
+ ssh root@$BETA ". ./cmv.func; fil_reg 15 0" # disable HDMI stream
+ for i in `seq 1 64`; do
+   ssh root@$BETA "./cmv_snap3 -2 -b -r -e 10ms" > dark-x1-10ms-$i.raw12 
+ done 
+ ssh root@$BETA ". ./cmv.func; fil_reg 15 0x01000100"  # enable HDMI stream
+
+Compute a temporary dark frame for RCN calibration:
+ raw2dng --swap-lines --no-blackcol --calc-darkframe dark-x1-10ms-*.raw12
+
+This should process quite quickly and output something like the following at the end:
+
+ <nowiki>Averaged 64 frames exposed from 12.00 to 12.00 ms.
+Could not compute dark current.
+Please use different exposures, e.g. from 1 to 50 ms.
+Dark offset : 0.00
+Writing darkframe-x1.pgm...
+Done.</nowiki>
+
+
+Rename and upload darkframe to your Beta:
+ mv darkframe-x1.pgm darkframe-rcn.pgm
+ scp darkframe-rcn.pgm root@$BETA:/root/
+
+Set the RCN values:
+ ssh root@$BETA "./rcn_darkframe.py darkframe-rcn.pgm"
+
+Put this in startup script (ie : [[kick_manual.sh]]) :
+ ./rcn_darkframe.py darkframe-rcn.pgm 
+
+If you get an error report like this:
+ <nowiki>Traceback (most recent call last):
+  File "rcn_darkframe.py", line 17, in <module>
+    import png
+ImportError: No module named 'png'</nowiki>
+
+... make sure the Beta is connected to the Internet via Ethernet and run:
+ pip install pypng
+
+... and then run the python script again.
+
+
+
+'''Validation'''
+
+Method 1:
+
+Put a lens cap on the camera and check the image on a HDMI monitor.
+
+In the camera set the matrix gains to:
+ <nowiki>./mat4_conf.sh  20 0 0 0  0 10 10 0  0 10 10 0  0 0 0 10  0 0 0 0</nowiki>
+
+run:
+ <nowiki>./rcn_clear.py</nowiki>
+
+The static noise profile should be visible.
+
+run: 
+ ./rcn_darkframe.py darkframe-rcn.pgm 
+
+The static noise profile should be gone.
+You will still see dynamic row noise (horizontal lines flickering) - thats expected.
+
+
+Method 2:
+
+This method is now entirely automated with running one script inside the camera: https://github.com/apertus-open-source-cinema/beta-software/blob/master/software/scripts/rcn_validation.sh
+
+Capture one darkframe without compensations:
+ ssh root@$BETA "./rcn_clear.py"
+ ssh root@$BETA "./cmv_snap3 -2 -b -r -e 10ms" > dark-check-1.raw12 
+
+
+Capture one darkframe with compensations:
+ ssh root@$BETA "./rcn_darkframe.py darkframe-rcn.pgm"
+ ssh root@$BETA "./cmv_snap3 -2 -b -r -e 10ms" > dark-check-2.raw12 
+
+
+Then use raw2dng to analyze the differences:
+ raw2dng --no-darkframe --check-darkframe dark-check-1.raw12
+ raw2dng --no-darkframe --check-darkframe dark-check-2.raw12
+
+With the compensated snapshot the column noise should disappear, and only row noise left should be dynamic (not static). Visual inspection: the dark frame should have only horizontal lines, not vertical ones.
+
+Sample output:
+
+ Average     : 127.36               # about 128, OK
+ Pixel noise : 5.44                 # this one is a bit high because we only corrected row and column offsets (it's OK)
+ Row noise   : 2.30 (42.2%)         # this one should be only dynamic row noise - see Method 3 below.
+ Col noise   : 0.20 (3.8%)          # this one is very small, that's what we need to check here
+
+
+
+Method 3:
+
+Capture 2 frames:
+ ssh root@$BETA "./cmv_snap3 -2 -b -r -e 10ms" > dark-check-1.raw12 
+ ssh root@$BETA "./cmv_snap3 -2 -b -r -e 10ms" > dark-check-2.raw12 
+
+Convert the two darkframes with raw2dng:
+ raw2dng dark-check-*
+
+Make sure you have the required octave function file in place:
+ wget https://raw.githubusercontent.com/apertus-open-source-cinema/misc-tools-utilities/master/darkframes/read_raw.m
+
+Also you need to install the octave "signal" and "control" packages from: http://octave.sourceforge.net/packages.php
+then inside octave run to install:
+ pkg install package_name 
+
+To check whether the entire row noise is dynamic, load the two raw images in octave and check the autocorrelation between the two row noise samples:
+
+ pkg load signal
+ a = read_raw('dark-check-1.DNG');
+ b = read_raw('dark-check-2.DNG');
+ ra = mean(a'); ra = ra - mean(ra);
+ rb = mean(b'); rb = rb - mean(rb);
+ xcov(ra, rb, 0, 'coeff')
+
+Result should be very small (about 0.1 or lower). When running this check on two uncalibrated dark frames, you will get around 0.8 - 0.9.
+
+
+
+'''Step 3:''' Dark frame calibration
+
+Make sure the RCN calibration from previous steps is in place before continueing here.
+
+Take 1600 dark frames at various exposure times and gains. This will require around 30GB of space on your PC.
+
+ for i in 1 2 3 4; do
+   for e in `seq 1 100`; do
+     for g in 1 2 3 4; do
+       ssh root@$BETA "./set_gain.sh $g"
+       ssh root@$BETA "./cmv_snap3 -2 -b -r -e ${e}ms" > dark-x${g}-${e}ms-$i.raw12
+     done
+   done
+ done
+
+Compute dark frames for each gain:
+
+ raw2dng --calc-dcnuframe dark-x1-*.raw12
+ raw2dng --calc-dcnuframe dark-x2-*.raw12
+ raw2dng --calc-dcnuframe dark-x3-*.raw12
+ raw2dng --calc-dcnuframe dark-x4-*.raw12
+
+This produces the following files:
+
+darkframe-x1.pgm, dcnuframe-x1.pgm, darkframe-x2.pgm, dcnuframe-x2.pgm, darkframe-x3.pgm, dcnuframe-x3.pgm, darkframe-x4.pgm, dcnuframe-x4.pgm
+
+Store these files in a save place as they will be used in post-processing.
+Place them in the directory where you capture raw12 files or experimental raw HDMI recordings, so raw2dng will use them.
+
+
+'''Validation'''
+
+Capture a few new raw12 darkframes with rcn enabled and PGMs in place for raw2dng.
+
+ raw2dng --check-darkframe dark*.raw12 > dark-check.log
+
+If the calibration worked you should get lower noise values as in step 2.
+
+average value: close to 128
+
+pixel noise: about 3 or 4 (may increase at longer exposure times)
+
+row noise and column noise should look similar to this: 
+ Pixel noise : 3               
+ Row noise   : 1.70     
+ Col noise   : 0.15
+
+
+
+'''Step 4:''' Color Profiling
+
+Set gain x1.
+
+ ssh root@$BETA "./set_gain.sh 1"
+
+Take a picture of the IT8 chart, correctly exposed.
+
+Edit the coordinates and the raw file name in [http://github.com/apertus-open-source-cinema/misc-tools-utilities/blob/master/color-calibration/calib_argyll.sh calib_argyll.sh].
+
+ ssh root@$BETA "./cmv_snap3 -2 -b -r -e 10ms" > it8chart.raw12
+ ./calib_argyll.sh IT8
+
+Save the following files:
+* ICC profile (*.icc)
+* OCIO configuration (copy/paste from terminal) + LUT file (*.spi1d)
+
+
+'''Validation'''
+
+Render the IT8 chart in Blender, using the OCIO configuration.
+
+Same with the ICC profile (Adobe? RawTherapee? What apps support ICC?)
+
+(todo: detailed steps)
+
+
+
+'''Step 5:''' HDMI Dark Frames
+For experimental 4k raw recording (https://www.apertus.org/axiom-beta-uhd-raw-mode-explained-article-may-2016) step 3 calibration is not required (step 2 should be in place though). Instead darkframes are collected from HDMI recordings.
+ 
+Record a 1-minute clip with lens cap on.
+
+Average odd and even frames.
+
+'''>>>>> TODO:''' polish and upload the averaging script)
+
+'''>>>>> TODO:''' check if the HDMI dark frames can be computed from regular dark frames)
+
+Results: darkframe-hdmi-A.ppm and darkframe-hdmi-B.ppm.
+
+
+
+'''Step 6:''' HDMI Filters for raw Recovery
+
+This calibration is for to the recorder, not for the camera.
+It's for recovering the original raw data from the HDMI, so it has nothing to do
+with sensor profiling and such.
+
+Record some scene with high detail AND rich colors.
+
+Take a raw12 snapshot in the middle of recording. The HDMI stream will pause for a few seconds.
+
+Upload two frames from the paused clip, together with the raw12 file.
+This calibration will be hardcoded in hdmi4k.
+
+The two frames must be in the native format of your video recorder (not DNG). You should be able to cut the video with ffmpeg -vcodec copy.
+
+'''>>>> TODO'''
+
+* batch script to copy all the utilities for the workflow
+* implement this: https://wiki.apertus.org/index.php/Calibration_files
+* automate HDMI calibration
+* remind Herbert to fix the line swapping bug
+
+
+----
+
+
+===EDL Parser===
+
+This script can take EDLs to reduce the raw conversion/processing to the essential frames that are actually used in an edit. This way a finished video edit can be converted to raw DNG sequences easily.
+
+Requirements: ruby
+
+ <nowiki>puts "BEFORE EXECUTION, PLS FILL IN YOUR WORK DIRECTORY IN THE SCRIPT (path_to_workdir)"
+
+
+puts "#!/bin/bash"
+i=0
+ffmpeg_cmd1 = "ffmpeg -i " 
+
+tc_in = Array.new
+tc_out = Array.new
+clip = Array.new
+
+file = ARGV.first
+ff = File.open(file, "r")
+
+ff.each_line do |line|
+	clip << line.scan(/NAME:\s(.+)/)
+	tc_in << line.scan(/(\d\d:\d\d:\d\d:\d\d).\d\d:\d\d:\d\d:\d\d.\d\d:\d\d:\d\d:\d\d.\d\d:\d\d:\d\d:\d\d/)
+	tc_out << line.scan(/\s\s\s\d\d:\d\d:\d\d:\d\d\s(\d\d:\d\d:\d\d:\d\d)/)
+
+end
+c=0
+clip.delete_at(0)
+clip.each do |fuck|
+	if clip[c].empty?
+		tc_in[c] = []
+		tc_out[c] = []
+	end
+	c=c+1
+end
+
+total_frames = 0
+tc_in = tc_in.reject(&:empty?)
+tc_out = tc_out.reject(&:empty?)
+clip = clip.reject(&:empty?)
+tc_in.each do |f|
+tt_in = String.new
+tt_out = String.new
+	tt_in = tc_in[i].to_s.scan(/(\d\d)\D(\d\d)\D(\d\d)\D(\d\d)/)
+	tt_out = tc_out[i].to_s.scan(/(\d\d)\D(\d\d)\D(\d\d)\D(\d\d)/)
+	framecount = ((tt_out[0][0].to_i-tt_in[0][0].to_i)*60*60*60+(tt_out[0][1].to_i-tt_in[0][1].to_i)*60*60+(tt_out[0][2].to_i-tt_in[0][2].to_i)*60+(tt_out[0][3].to_i-tt_in[0][3].to_i))
+	framecount = framecount + 20
+	tt_in_ff = (tt_in[0][3].to_i*1000/60)
+	frames_in = tt_in[0][0].to_i*60*60*60+tt_in[0][1].to_i*60*60+tt_in[0][2].to_i*60+tt_in[0][3].to_i
+	frames_in = frames_in - 10
+	new_tt_in = Array.new
+	new_tt_in[0] = frames_in/60/60/60
+	frames_in = frames_in - new_tt_in[0]*60*60*60
+	new_tt_in[1] = frames_in/60/60
+	frames_in = frames_in - new_tt_in[1]*60*60
+	new_tt_in[2] = frames_in/60
+	frames_in = frames_in - new_tt_in[2]*60
+	new_tt_in[3] = frames_in
+	frames_left = (tt_in[0][0].to_i*60*60*60+(tt_in[0][1].to_i)*60*60+(tt_in[0][2].to_i)*60+(tt_in[0][3].to_i))-10
+	new_frames = Array.new
+	new_frames[0] = frames_left/60/60/60
+	frames_left = frames_left - new_frames[0]*60*60*60
+	new_frames[1] = frames_left/60/60
+	frames_left = frames_left - new_frames[1]*60*60
+	new_frames[2] = frames_left/60
+	frames_left = frames_left - new_frames[2]*60
+	new_frames[3] = frames_left
+	tt_in_ff_new = (new_frames[3]*1000/60)
+
+	clip[i][0][0] = clip[i][0][0].chomp("\r")
+	path_to_workdir = "'/Volumes/getztron2/April Fool 2016/V'"
+	mkdir = "mkdir #{i}\n"
+	puts mkdir
+	ff_cmd_new = "ffmpeg -ss #{sprintf '%02d', new_frames[0]}:#{sprintf '%02d', new_frames[1]}:#{sprintf '%02d', new_frames[2]}.#{sprintf '%02d', tt_in_ff_new} -i #{path_to_workdir}/#{clip[i][0][0].to_s} -frames:v #{framecount} -c:v copy p.MOV -y"
+	puts ff_cmd_new
+	puts "./render.sh p.MOV&&\n"
+	puts "mv frame*.DNG #{i}/"
+	hdmi4k_cmd = "hdmi4k #{path_to_workdir}/frame*[0-9].ppm --ufraw-gamma --soft-film=1.5 --fixrnt --offset=500&&\n"
+
+	ff_cmd2 = "ffmpeg -i #{path_to_workdir}/frame%04d-out.ppm -vcodec prores -profile:v 3 #{clip[i][0][0]}_#{i}_new.mov -y&&\n"
+	puts "\n\n\n"
+	i=i+1
+	total_frames = total_frames + framecount
+end
+
+puts "#Total frame: count: #{total_frames}"</nowiki>
+
+Pipe it to a Bash file to have a shell script.
+
+'''Note from the programmer:''' This is really unsophisticated and messy. Feel free to alter and share improvements.
+
+
+----
+
+
+===cmv_perf3===
+
+'''>>>>> TODO'''
+
+
+----
+
+
+==SDI==
+
+'''>>>>> TODO''' SDI Instructions required - ETA Dec 2017.
+
+
+----
+
+
+==Modes==
+
+'''Note:''' Modes like YCrCb, etc. are currently not supported. 
+
+
+===1080p60/1080p50 Mode===
+
+ rm -f cmv_hdmi3.bit
+ ln -s cmv_hdmi3_60.bit cmv_hdmi3.bit
+ sync
+ reboot now
+
+
+----
+
+
+===1080p30/1080p25 Mode===
+
+ rm -f cmv_hdmi3.bit
+ ln -s cmv_hdmi3_30.bit cmv_hdmi3.bit
+ sync
+ reboot now
+
+
+----
+
+
+==Generator and HDMI Output==
+
+Independent of the firmware you can switch the rate of the generator. In setup.sh you can change the generator resolution and framerate.
+
+After changing the generator mode, make sure to restart it:
+
+ ./halt_manual.sh && ./kick_manual.sh
+
+ ./gen_init.sh 1080p60
+ ./gen_init.sh 1080p50
+ ./gen_init.sh 1080p25
+
+To enable the shogun mode, which is only possibly by current hardware:
+ ./gen_init.sh SHOGUN
+
+1080p25 mode is known to work on the Shogun if using the SHOGUN profile and then setting 
+ scn_reg 0 2640
+
+In Shogun mode, the exposure (shutter) is synced to the output frame rate, but can be a multiple, i.e. with 60FPS output, it can be 60, 30, 20, 15, 12, ... The exposure time (shutter angle if divided by FPS) is entirely controlled by the sensor at the moment.
+
+'''Note:''' The firmware controls the shutter, not the generator.
+
+In the future, this will be combined and processed by only one piece of software.
+
+
+----
+
+
+==Stopping and Starting HDMI Live-stream==
+
+Stop HDMI live stream: 
+
+ fil_reg 15 0
+
+Start HDMI live stream: 
+
+ fil_reg 15 0x01000100} 
+
+
+----
+
+
+=Processing=
+
+'''>>>> TODO''' Overview Text.
+
+Post-processing software to recover the raw information (DNG sequences) is on github: https://github.com/apertus-open-source-cinema/misc-tools-utilities/tree/master/raw-via-hdmi
+
+Required packages: ffmpeg build-essentials
+
+Mac requirements for compiling: gcc4.9(via homebrew): 
+ brew install homebrew/versions/gcc49
+
+also install ffmpeg
+
+To do all the raw processing in one single command (after ffmpeg codec copy processing):
+ ./hdmi4k INPUT.MOV - | ./raw2dng --fixrnt --pgm --black=120 frame%05d.dng
+
+
+----
+
+
+==Image Acquisition Pipeline==
+
+[[File:AXIOM_Beta_Image_Acquisition_Pipeline.png | 900px]]
+
+
+----
+
+
+==HDMI Image Processing/Output Pipeline==
+
+[[File:AXIOM_Beta_Image_Pipeline.png | 900px]]
+
+
+----
+
+
+==SDI Image Processing/Output Pipeline==
+
+'''>>>> TODO''' ETA Dec 2017
+
+
+----
+
+
+==Image Processing Nodes==
+
+'''Debayering'''
+
+A planned feature is to generate this FPGA code block with "dynamic reconfiguration" meaning that the actual debayering algorithm can be replaced at any time by loading a new FPGA binary block at run-time.
+
+This tries to simplify creating custom debayering algorithms with a script like programming language that can be translated to FPGA code and loaded into the FPGA dynamically for testing.
+
+
+'''Peaking Proposal'''
+
+[[Peaking]] marks high image frequency areas with colored dot overlays. These marked areas are typically the ones "in-focus" at any given time so this is a good way to see where the focus lies with screens that might have a lower resolution than the camera is capturing.
+
+
+'''Handy Custom Parameters:'''
+
+*Color
+*Frequency threshold
+
+
+'''Potential Problems:'''
+
+* There are sharper and softer lenses so the threshold depends on the glass being used. For a sharp lens the peaking could show areas as "in-focus" when they aren't, and for softer lenses the peaking might never show up at all because the threshold is never reached
+
+
+----
+
+
+=Formats=
+
+We created a special firmware for high speed recording which allows to record a burst of 4K 4:3 raw12 images camera-internally for about 1 second until the cameras RAM is full.
+
+Dual 6G SDI module is currently in development.
+
+'''Note:''' Compression could aid with packing more images (fps) into the available bandwidth (12 - 18Gbit/s) but also comes with some drawbacks. Research pending.
+
+'''Related:''' m.2 Sata
+
+m.2 (PCIe or 6G SATA) requires MGTs (Multi Gigabit Tranceivers) and complicated protocol stacks (PCIe, SATA) to work. As we don't have MGTs on the MicroZed, it would require an additional high speed FPGA (e.g. Artix, Cyclone) and a significant amount of software development.
+
+
+'''ProRes'''
+
+It's possible to record in [https://en.wikipedia.org/wiki/Apple_ProRes#ProRes_422 Apple ProRes] on external recording devices e.g. an Atomos Shogun connected to the AXIOM Beta over HDMI. For camera internal ProRes recording we would need Apple to grant us a licence - Conforming to Apple standards isn't a priority.
+
+
+'''raw'''
+
+See [[RAW12]].
+
+
+----
+
+
+==Converting==
+
+'''>>>> TODO''' Overview text required.
+
+
+===RAW12 to PGM===
+
+Converts a video file recorded in AXIOM raw to a PGM image sequence and applies the darkframe (which needs to be created beforehand).
+
+Currently clips must go through ffmpeg before hdmi4k can read them:
+ ffmpeg -i CLIP.MOV -c:v copy OUTPUT.MOV
+
+To cut out a video between IN and OUT with ffmpeg but maintaing the original encoding data:
+ ffmpeg -i CLIP.MOV -ss IN_SECONDS -t DURATION_SECONDS -c:v copy OUTPUT.MOV
+
+ <nowiki>
+hdmi4k
+HDMI RAW converter for Axiom BETA
+
+Usage:
+  ./hdmi4k clip.mov
+  raw2dng frame*.pgm [options]
+
+Calibration files:
+  hdmi-darkframe-A.ppm, hdmi-darkframe-B.ppm:
+  averaged dark frames from the HDMI recorder (even/odd frames)
+
+Options:
+-                   : Output PGM to stdout (can be piped to raw2dng)
+--3x3               : Use 3x3 filters to recover detail (default 5x5)
+--skip              : Toggle skipping one frame (try if A/B autodetection fails)
+--swap              : Swap A and B frames inside a frame pair (encoding bug?)
+--onlyA             : Use data from A frames only (for bad takes)
+--onlyB             : Use data from B frames only (for bad takes)</nowiki>
+
+
+----
+
+
+===RAW12 to DNG===
+
+Compiling raw2dng on a 64bit system requires the gcc-multilib package.
+
+Ubuntu:
+ sudo apt-get install gcc-multilib
+
+openSUSE:
+ sudo zypper install gcc-32bit libgomp1-32bit
+
+AXIOM Beta:
+#acquire the source from https://github.com/apertus-open-source-cinema/misc-tools-utilities/tree/master/raw2dng
+#copy files to AXIOM Beta
+#remove "-m32" from Makefile
+#run "make" inside camera
+
+
+----
+
+=Maintenance=
+
+'''>>>> TODO''' Overview text required.
+
+==Firmware==
+
+The entire AXIOM Beta firmware is stored on a Micro SD card. This means the camera's operating system can be swapped out and that external recovery of the camera entire software in case anything went wrong is easily done, e.g. during flashing is always possible. It also means that experimental features can be tried and tested simply by popping a different card into the camera.
+
+'''>>>> TODO''' See below:
+
+* Automate the firmware image creation in a single script: https://lab.apertus.org/T697
+* ship with webserver installed and configured to autostart: https://wiki.apertus.org/index.php/Installing_a_webserver_on_AXIOM_Beta and Beta webapps preloaded: https://github.com/apertus-open-source-cinema/beta-software/tree/master/http
+* update beta apps from github to latest: cmv_hist3, cmv_perf3, cmv_snap3, mimg, lut_conf3, cmv_train3 and/or push any pending code changes of these apps to github
+* place all beta scripts https://github.com/apertus-open-source-cinema/beta-software/tree/master/beta-scripts in /root/
+* Live firmware image version number that can also be read from within the firmware (/etc/os-release, echo with /etc/issue at login)
+* compile raw2dng in camera and ship firmware with preinstalled binary (in /usr/bin?) (https://github.com/apertus-open-source-cinema/misc-tools-utilities/tree/master/raw2dng)
+* add https://github.com/apertus-open-source-cinema/beta-software/tree/master/beta-images to firmware (where? to root or own subdir?) and change default overlay to load AXIOM-Beta-logo-overlay-white.raw with latest mimg
+* "pip3 install bitarray" to solve error reported at the end of kick_manual.sh
+* "pip install pypng" to solve error reported when trying to load darkframe
+
+
+----
+
+
+==Firmware Backup==
+
+The entire camera firmware is stored on a Micro SD card that's plugged into the Microzed. To back up the entire firmware we plug the Micro SD card into a Linux PC and do the following:
+
+1. Find out which device the micro SD card is: 
+ cat /proc/partitions
+ mount
+... should give you a list of all connected devices. Let's assume in our case that the card is /dev/sdc
+
+2. Make sure the card is unmounted (all 3 partitions):
+ umount /dev/sdc1
+ umount /dev/sdc2
+ umount /dev/sdc3
+
+3. Clone the entire card to a file:
+ ddrescue /dev/sdc sdimage.img sdimage.log
+
+
+For Mac and Windows see this guide: http://raspberrypi.stackexchange.com/questions/311/how-do-i-backup-my-raspberry-pi
+
+
+----
+
+
+==Firmware Restore==
+
+Again, you need to know the device path of your sd card, then (assuming in our case it's /dev/sdb) run:
+
+ sudo dd if=sdimage.img of=/dev/sdb bs=4M
+
+
+----
+
+
+==Image Sensor cleaning==
+
+[[File:Green_Swabs_200X200_B.png | 500px| thumb | 550px]]
+We are using the green sensor cleaning swabs (See right).
+
+It comes with two cleaning solutions: one for dust and one for any oil based residues (finger prints, etc.)
+
+In this section we try to collect typical sensor contamination images and guide on how to spot and get rid of them.
+
+The best lighting conditions to spot contamination seems to be mid grey, you can take off or slightly turn the lens to make sure the contamination is not on any lens glass element.
+
+Vertical streaks:
+
+[[File:Vertical-streaks.png | 550px]]
+
+These are the result of using the dust cleaning solution on the sensor. Likely the streaks are oil based contaminations. Use the red bottle "smear away" and a swap to clean the sensor.
+
+
+----
+
+
+=Installations=
+
+'''>>>> TODO''' - Overview text required.
+
+==Installing a Webserver==
+
+Make sure the AXIOM Beta is connected to the internet and then on the commandline run:
+
+Update mirrors database:
+ pacman -Syy
+
+
+Install webserver:
+ pacman -S lighttpd php php-cgi
+
+
+Start the webservice:
+ systemctl start lighttpd
+
+
+Write any pending changes to the file system:
+ sync
+
+
+----
+
+
+==Configuring a Webserver==
+
+This follows the guide on the lighttpd archlinux wiki page: https://wiki.archlinux.org/index.php/lighttpd
+
+ mkdir /etc/lighttpd/conf.d/
+ nano /etc/lighttpd/conf.d/cgi.conf
+
+
+... and place the following content in the file:
+ <nowiki>server.modules += ( "mod_cgi" )
+
+ cgi.assign                 = ( ".pl"  => "/usr/bin/perl",
+                               ".cgi" => "/usr/bin/perl",
+                               ".rb"  => "/usr/bin/ruby",
+                               ".erb" => "/usr/bin/eruby",
+                               ".py"  => "/usr/bin/python",
+                               ".php" => "/usr/bin/php-cgi" )
+
+ index-file.names           += ( "index.pl",   "default.pl",
+                               "index.rb",   "default.rb",
+                               "index.erb",  "default.erb",
+                               "index.py",   "default.py",
+                               "index.php",  "default.php" )</nowiki>
+
+
+For PHP scripts you will need to make sure the following is set in /etc/php/php.ini
+
+ cgi.fix_pathinfo = 1
+
+
+In your Lighttpd configuration file, /etc/lighttpd/lighttpd.conf add:
+
+ include "conf.d/cgi.conf"
+
+
+... create a new configuration file /etc/lighttpd/conf.d/fastcgi.conf
+
+ <nowiki># Make sure to install php and php-cgi. See:                                                             
+# https://wiki.archlinux.org/index.php/Fastcgi_and_lighttpd#PHP
+
+server.modules += ("mod_fastcgi")
+
+# FCGI server
+# ===========
+#
+# Configure a FastCGI server which handles PHP requests.
+#
+index-file.names += ("index.php")
+fastcgi.server = ( 
+    # Load-balance requests for this path...
+    ".php" => (
+        # ... among the following FastCGI servers. The string naming each
+        # server is just a label used in the logs to identify the server.
+        "localhost" => ( 
+            "bin-path" => "/usr/bin/php-cgi",
+            "socket" => "/tmp/php-fastcgi.sock",
+            # breaks SCRIPT_FILENAME in a way that PHP can extract PATH_INFO
+            # from it 
+            "broken-scriptfilename" => "enable",
+            # Launch (max-procs + (max-procs * PHP_FCGI_CHILDREN)) procs, where
+            # max-procs are "watchers" and the rest are "workers". See:
+            # https://redmine.lighttpd.net/projects/1/wiki/frequentlyaskedquestions#How-many-php-CGI-processes-will-lighttpd-spawn 
+            "max-procs" => 4, # default value
+            "bin-environment" => (
+                "PHP_FCGI_CHILDREN" => "1" # default value
+            )
+        )
+    )   
+)</nowiki>
+
+
+Make lighttpd use the new configuration file /etc/lighttpd/lighttpd.conf
+
+ include "conf.d/fastcgi.conf"
+
+
+restart lighttpd:
+ systemctl restart lighttpd
+
+
+To test php create a file: /srv/http/index.php with content:
+ <nowiki><?php
+phpinfo();
+?></nowiki>
+
+
+... and open this IP address of your AXIOM Beta in a browser, if you see the php info status page everything worked successfully.
+
+
+----
+
+
+==Installing AXIOM Beta Web GUI software==
+
+Download this repository:
+ https://github.com/apertus-open-source-cinema/beta-software
+
+#copy all files from the http directory of the repository to your AXIOM Beta /srv/http/ directory.
+#copy all files from the beta-scripts directory of the repository to your AXIOM Beta /root/ directory.
+
+Edit /etc/sudoers files:
+
+under the line:
+ root ALL=(ALL) ALL
+
+... add:
+ http ALL=(ALL) NOPASSWD: ALL
+
+This allows the http user to do anything with the system so it can be considered a security vulnerability - but for development this should not be an issue, later on we will define the http priviledges more securely.
+
+For testing sudoers:
+ sudo -u http sudo whoami
+... if it returns "root" then you are all set.
+
+
+This should provide you with a working web-based GUI.
+
+'''Note:''' lighttpd does not start automatically when the AXIOM Beta boots, this still needs to be configured:
+ systemctl enable lighttpd
+
+'''Warning:''' Opening any websites that read image sensor registers before initializing the image sensor (kick_manual.sh) '''will freeze/crash the camera'''.
+
+
+----
+
+
+==Packet Manager Pacman==
+
+Update all package definitions and the database from the Internet:
+ pacman -Sy
+
+'''Warning:''' Careful with upgrading existing packages. For example the Kernel used in the AXIOM Beta is custom developed - '''if you upgrade Arch Linux to the latest off the shelf Kernel you will BRICK your camera firmware'''.
+
+
+Install lighttp webserver on the Beta:
+ pacman -S lighttpd
+
+
+Install PHP on the Beta:
+ pacman -S php php-cgi
+
+
+Follow these instructions: https://wiki.archlinux.org/index.php/lighttpd#PHP
+
+
+Start the webserver:
+ systemctl start lighttpd
+
+
+----
+
+
+=Associated Use Cases=
+
+'''>>>> TODO''' - Overview text required.
+
+==Configuration for Photography==
+
+To increase the quality of created images it is highly recommended to do Factory Calibration of your AXIOM Beta first. See Section: Output
+
+
+----
+
+
+===Calibration===
+
+'''Compile raw2dng inside AXIOM Beta'''
+
+#acquire the source files from https://github.com/apertus-open-source-cinema/misc-tools-utilities/tree/master/raw2dng
+#copy files to AXIOM Beta
+#run "make" inside camera
+
+
+'''Install dcraw inside AXIOM Beta'''
+
+ pacman -Sy
+ pacman -S dcraw
+
+
+'''Picture Snapping script'''
+
+Download https://github.com/apertus-open-source-cinema/beta-software/blob/master/beta-scripts/picture_snap.sh to camera
+
+make it executeable:
+ chmod +x picture_snap.sh
+
+
+----
+
+
+===Operation===
+
+Picture snaps are saved in subfolders in the camera's /opt/picture-snap/ directory.
+
+The script automatically names each subfolder and image by a timestamp: %Y%m%d_%H%M%S
+
+
+Execute the image snapping by providing the exposure time running eg.:
+ ./picture_snap.sh 20ms
+
+One complete capture process plus DNG & JPG conversion takes 18 seconds currently.
+
+
+----
+
+
+=Hardware=
+
+See [[Hardware/Misc]] for AXIOM Beta/OLPF (Optical Low Pass Filter) / Cable Armour / DIY Flourescent Area Light / Integrating Sphere / Quicklock Plate / Rods / Rosettes / V-Mount / Various mechanical links.
+
+“The hardware design of the AXIOM Beta was kept simple at first, purely addressing problems discovered with the AXIOM Alpha. In the beginning we had intended to design the camera around a single board on top of an off-the-shelf FPGA/system-on-chip development board: the MicroZed™, but as a result of field testing and together with feedback gathered from the community we agreed to make it far more powerful by devising a more complex stack of boards where each layer is dedicated to specific functions.” - Sebastian Pichelhofer.
+
+
+----
+
+
+==AXIOM Beta PCB Stack Layout==
+
+Version 4:
+
+<center>
+[[File:PCB-Stack-Concept-V03-022.jpg | 700px]]
+</center>
+
+'''Note:''' All dimensions are not final. Work in progress...
+
+[[File:PCB_Stack_Concept_V03_02.pdf]]
+
+Onshape CAD workfile [https://cad.onshape.com/documents/58833d76000df10fe2249f8a/w/1e208f70f250bcc59aa74d03/e/51df8678a0ad64b69c121f5f here]
+
+
+----
+
+
+===Skeleton and Enclosure===
+
+'''>>>> TODO''' Overview text required (picture ideally)
+
+Skeleton and Skeleton Footplate: https://github.com/apertus-open-source-cinema/beta-hardware/tree/master/Enclosure/Skeleton_E-mount
+
+Onshape PCB Stack and Skeleton Assembly: https://cad.onshape.com/documents/58bd498285673a104722aacd/w/466b8105bf6807b3f4f50b6c/e/b33cc7b3cc3cc5eebd5c2ae6
+
+For enclosures (development pending) see - [[AXIOM_Beta/Enclosures]]
+
+
+----
+
+
+[[File:Beta Board Stack.jpg| thumb | 350px | AXIOM Beta electronic board stack.]]
+==AXIOM Beta PCB Stack Overview==
+
+The AXIOM Beta comprises five printed circuit boards (PCBs):
+
+* Sensor Board
+* Sensor Interface Board
+* AXIOM Beta Main Board
+* AXIOM Beta Power Board
+* Microzed
+
+
+{| class="wikitable"
+!colspan=3| AXIOM Beta PCB's
+|-
+| Sensor Board|| [[File:Temporary_Sensor_Board.jpg|thumb|none|200px|ZIF socket based image sensor interface board.]] || The [[Beta CMV12K ZIF Sensor Board]] hosts the heart of every cinema camera - the (CMOS) image sensor. apertus° offered three different sensor options during the crowd funding campaign; Super35, Super16 and 4/3rds, and as almost 90% of the backers opted for the Super35 sensor its respective module was developed first. The camera uses the ams Sensors Belgium CMV12000. '''Note:''' The ZIF (Zero insertion force) socket is useful for developers as it allows for the sensors removal at the turn of a lever (zero force). The AXIOM Beta II: Production Ready camera hosts the [[Beta CMV12K THT Sensor Board]]. THT (Through hole tech) is suited to applications where the sensor-front-end won't be removed regularly. As such the THT Sensor Board requires that care is taken not to bend the sensor pins on insertion.
+|-
+| Interface Board|| [[File:BetaDummyBoard 0.12 TOP.jpg|thumb|none|200px|Interface Board V1 without FPGA for now]] || The [[Beta Interface Dummy Board]] acts as a bridge between the image sensor board and the rest of the camera. It converts communication between the aforementioned components to a standard protocol so that almost any image sensor that becomes available in the future can be used with the AXIOM Beta without changing the rest of the hardware. If AXIOM users felt that 8K was in demand they would simply swap the sensor board for one capable of capturing images in the desired resolution.
+|-
+| Beta Main Board|| [[File:Beta_Main_Board.jpg|thumb|none|200px|AXIOM Beta Main Board circa 2016.]] ||The [[Beta Main Board]] is the equivalent of a PC's motherboard. It hosts two external medium-speed shield connectors and two high-speed plugin module slot connectors. These act as a central switch for defining where data captured by the sensor and other interfaces gets routed to inside the hardware. In this regard, all specifics can be dynamically reconfigured in software opening up a lot of new possibilities such as adding shields for audio recording, genlock, timecode, remote control protocols or integrating new codecs and image processing inside the FPGA. In the centre of the main board a 'solder-on' area has been incorporated, this will for example host chips capable of sensing the camera's orientation and acceleration (the same chips used to stabilise quadcopters and track head movements in VR headsets). Being situated directly behind the image sensor centre means that these sensors are ideally positioned to supply data for image stabilisation or metadata about the camera’s orientation and movement during a shot. 
+|-
+| Beta Power Board|| [[File:Beta_Power_Board.jpg|thumb|none|200px|AXIOM Beta Power Board V.01.]] ||
+Finally, the [[Beta Power Board]] PCB, the last board in the stack before the MicroZed™, generates all the different supply voltages for the chips and logic on the other PCB’s inside the camera. It also monitors currents so that it can estimate remaining power based on the recorded consumption. In the current revision of the camera a predefined set of supply voltages matching the current application with the rest of the camera have been generated, in the future however, it will be possible for users to dynamically reconfigure voltages according to their needs through the camera’s software.
+|-
+| MicroZed|| [[File:Microzed.jpg|thumb|none|200px|Xilinx MicroZed™.]] ||
+The [[AES-Z7MB-7Z020-SOM-G]] MicroZed™ is a development board based on the Xilinx Zynq®-7000 All Programmable SoC (System-on-a-Chip). It can be used as both a stand-alone development board for SoC experimentation or in a product like the AXIOM Beta.
+|}
+
+
+----
+
+
+==AXIOM Beta Plugin Modules and Shields==
+
+The AXIOM Beta has 2 medium speed IO interfaces to be used with "shields".
+
+* One 200Mbit/s shield interface.
+* One 1Gbit/s shield interface.
+
+'''Note:''' Shields are not hot plug-able.
+
+
+There are 2 high speed IO interfaces where "plugin modules" can be hot plugged.
+
+* 6.2Gbit/s each:
+** 6 ✕ 950Mbit/s
+** 500MBit/s GPIO
+* Two modules can be combined in one 12.4 Gbit/s double height module.
+* Hot pluggable.
+* 2x PCIe connectors (not using PCIe signaling)
+
+
+{| class="wikitable"
+!colspan=3| AXIOM Beta Plugin Modules and Shields
+|-
+| HDMI Plugin Module|| [[File:Axiom Beta Plugin Module 1x HDMI v0.4 TOP.jpg|thumb|none|200px|Axiom Beta 1x HDMI Plugin Module V0.4.]] || The [[Beta HDMI Plugin Module]] ...
+|-
+| Power Adapter|| [[File:Power-adapter-02.jpg|thumb|none|200px| AXIOM Beta Power Adapter]] || The [[Beta Power Adapter Board]] ...
+|-
+| Debug Shield|| [[File:Debug-shield-bot01.jpg|thumb|none|200px|...]] ||The [[Beta Debug Shield]] ...
+|-
+| 1x PMOD Plugin Module|| [[File:1xpmodbot.jpg|thumb|none|200px|AXIOM Beta Power Board V.01.]] ||
+The [[Beta 1x PMOD Plugin Module]] ...
+|-
+| 3x PMOD Plugin Module|| [[File:|thumb|none|200px|....]] ||
+The [[Beta 3x PMOD Plugin Module]].
+|-
+| PMOD LED Matrix Debug Module|| [[File:Pmod-debug-module-bot.jpg|thumb|none|200px|PMOD LED Matrix Debug Module.]] ||
+The [[PMOD LED Matrix Debug Module]] ...
+|-
+| 4K HDMI Plugin Module|| [[File:...|thumb|none|200px|...]] ||
+The [[4K HDMI Plugin Module]] ...
+|}
+
+
+----
+
+
+==EEPROM==
+
+All of the PCBs we created for the AXIOM Beta (aside from the AXIOM Beta Main Board) have an onboard [https://en.wikipedia.org/wiki/EEPROM EEPROM]. These chips provide between 4KB and 16KB of non-volatile memory. These EEPROMs are used to store unique identifiers for each board/type. In a modular stack of PCBs the camera firmware can read the EEPROMs of each PCB and identify which boards, versions and revisions are attached (different board versions might need different drivers/firmware elements).
+
+
+----
+
+
+===Proposed Unique ID Structure===
+
+2 byte board type identifier (65.536 possible values):
+ <nowiki>
+00 - AXIOM Beta Powerboard
+01 - AXIOM Beta Interface Board
+02 - AXIOM Beta Sensor Frontend
+03 - AXIOM Beta Single Slot Plugin Module
+04 - AXIOM Beta Dual Slot Plugin Module
+05 - AXIOM Beta Low Speed Shield
+06 - AXIOM Beta Medium Speed Shield
+</nowiki>
+
+1 byte board output identifier:
+ number of output interfaces
+
+
+1 byte board active/passive identifier:
+
+
+4 byte board current draw range identifier:
+ 2 bytes typical low end range in mA
+ 2 bytes typical high end range in mA
+
+
+2 byte board length in mm:
+
+
+1 byte number of used LVDS lanes
+
+
+1 byte number of used GPIO channels
+
+
+2 byte board identifier:
+ <nowiki>
+00 - AXIOM Beta Powerboard
+01 - AXIOM Beta Interface Dummy
+02 - AXIOM Beta Interface Board
+03 - AXIOM Beta CMV12000 ZIF Sensor Frontend
+04 - AXIOM Beta CMV12000 Socket Sensor Frontend
+05 - AXIOM Beta 1x HDMI Plugin Module
+06 - AXIOM Beta 3x Displayport Plugin Module
+07 - AXIOM Beta 1x PMOD Plugin Module
+08 - AXIOM Beta 3x PMOD Plugin Module
+09 - AXIOM Beta 1x HDMI IN Plugin Module
+0A - AXIOM Beta Dual Riser Plugin Module
+0B - AXIOM Beta Debug Shield
+</nowiki>
+
+
+2 byte board version identifier 
+
+(ASCII A.BC corresponding to label printed on PCB)
+
+2 byte board revision identifier 
+
+(ASCII A.BC corresponding to label printed on PCB)
+
+128 byte UUID
+
+
+----
+
+
+==Power==
+
+===DC Supply===
+The AXIOM Beta ships with 5V DC power supply.
+
+The camera takes two 5V inputs (1x Microzed, 1x rest of electronics) and draws 4A max. Power consumption depends on operation and is in the 10-20 W range typically.
+
+
+----
+
+
+===DC/DC Converter===
+
+Two 5V 2.5A output converters should be suitable. 
+
+For batteries, both isolated as well as non-isolated DC converters are suitable.
+
+https://octopart.com/search?q=171050601 would be an option.
+
+
+----
+
+
+For battery power see [[Power]] or [https://lab.apertus.org/T736 Battery System] on Labs.
+
+
+----
+
+
+==Image Sensor Frontend==
+
+
+<center>
+[[File:Axiom-beta-image-sensor-distances.png | 900px]]
+</center>
+
+
+----
+
+
+==Image Sensors==
+
+<center>
+[[File:Sensor-lens.png | 500px|]]
+</center>
+
+
+
+{| class="wikitable"
+! style="text-align: right; font-weight: bold;" | Axiom Beta Model
+! 16mm
+! Four Thirds
+! Super35
+|-
+| style="text-align: right; font-weight: bold;" | Brand
+| CMOSIS
+| ON Semionductor<br />(prev. Truesense/Kodak)
+| CMOSIS
+|-
+| style="text-align: right; font-weight: bold;" | Model
+| [[CMV2000]]
+| [[KAC12040]]
+| [[CMV12000]]
+|-
+| style="text-align: right; font-weight: bold;" | Development Status
+| in development
+| planned
+| completed
+|-
+| style="text-align: right; font-weight: bold;" | Type
+| colspan="3" style="text-align: center;" | CMOS
+|-
+| style="text-align: right; font-weight: bold;" | Shutter Type
+| Pipelined Global Shutter
+| Global & Rolling Shutter
+| Pipelined Global Shutter
+|-
+| style="text-align: right; font-weight: bold;" | Color filter Array
+| colspan="3" style="text-align: center;" | Bayer (Color model)<br />None (B/W model)
+|-
+| style="text-align: right; font-weight: bold;" | IR filter
+| colspan="3" style="text-align: center;" | no
+|-
+| style="text-align: right; font-weight: bold;" | Anti-Aliasing Filter (OLPF)
+| colspan="3" style="text-align: center;" | no
+|-
+| style="text-align: right; font-weight: bold;" | Size
+| 10.6 mm × 5.94 mm<br />ø 12.1 mm
+| 18.8 mm × 14.1 mm<br />ø 23.5 mm
+| 22.5 mm × 16.9 mm<br />ø 28.2 mm
+|-
+| style="text-align: right; font-weight: bold;" | Crop Factor
+| Full Frame ∕ 3.56<br />16mm Film ∕ 1.05
+| Full Frame ∕ 1.84<br />Four Thirds ∕ 0.96
+| Full Frame ∕ 1.54<br />Super35 ∕ 1.10
+|-
+| style="text-align: right; font-weight: bold;" | Aspect Ratio
+| 16:9
+| 4:3
+| 4:3
+|-
+| style="text-align: right; font-weight: bold;" | Pixel Resolution (h × v)
+| 1920 × 1080
+| 4000 × 3000
+| 4096 × 3072
+|-
+| style="text-align: right; font-weight: bold;" | Pixel Size
+| 5.5 µm
+| 4.7 µm
+| 5.5 µm
+|-
+| style="text-align: right; font-weight: bold;" | Dynamic Range
+| 10 stops<br />15 stops (HDR mode)
+| 9.3 stops (Gobal Shutter)<br />12 stops (Rolling Shutter)
+| 10 stops<br />15 stops (HDR mode)
+|-
+| style="text-align: right; font-weight: bold;" | Sensitivity
+| 
+| 200 ISO
+| ~ 400 - 1250 ISO
+|-
+| style="text-align: right; font-weight: bold;" | Max Frame Rate @ Bit Depth
+| 340 fps @ 10 bit<br />70 fps @ 12 bit
+| 110 fps @ 8 bit<br />70 fps @ 10 bit<br />30 fps @ 12 bit<br />10 fps @ 14 bit
+| 300 fps @ 10 bit<br />180 fps @ 12 bit
+|-
+| style="text-align: right; font-weight: bold;" | More info
+| 
+* [http://www.cmosis.com/index.php?/products/standard_products/cmv2000/ Official Specs]
+| 
+* [http://www.onsemi.com/pub_link/Collateral/KAC-12040-D.PDF Datasheet]
+| 
+* [https://github.com/apertus-open-source-cinema/alpha-hardware/blob/master/Datasheets/datasheet_CMV12000%20v1.12.pdf Datasheet]
+* [http://www.cmosis.com/index.php?/products/standard_products/cmv12000/ Official Specs]
+* [http://www.magiclantern.fm/forum/index.php?topic=11787.msg129672#msg129672 Sensor Noise Analysis]
+|}
+
+The community is keeping a log of sensors that would be compatible with the camera. See [[Image Sensor Table]].
+
+
+----
+
+
+===CMV12000 Sensor Output===
+
+'''Note:''' This is the standard sensor we've used for R&D purposes, however, the camera will accommodate other sensors, we just haven't got around to running practical tests yet.
+
+Crop factor is 1.6.
+
+In numbers the CMV12000 has a light sensitivity between 200 and 800 ISO depending on analog and sensor gain settings.
+
+The sensor is 4k i.e. 4096x3072 so there is nothing more to capture than that, but if you assume that 4k (wide format) is 3840x2160 then yes, you can capture slightly more than that.
+
+
+Capturing full sensor output is simply a case of running "cmv_snap" command and the resulting image will increase to 4096x3072.
+
+
+'''Monochrome'''
+
+The CMV12000 we use in the AXIOM Beta comes in 3 pin compatible flavours: Color, Monochrome and NIR (Near Infrared enhanced Monochrome).
+
+
+----
+
+
+==Lens Mounts==
+
+AXIOM Beta is outfitted with an E-Mount skeleton currently. We provide adapters for Canon EF & Nikon F (Commlite) mounts. Further adapters like PL, etc are widely available.
+
+We have not had a chance to test any speedbooster directly on the camera but are keen on community reports here.
+
+{| class="wikitable"
+! style="text-align: right; font-weight: bold;" | Mount
+! colspan="2" | Nikon F
+! colspan="2" | Canon EF
+! Micro Four Thirds
+|-
+| style="text-align: right; font-weight: bold;" | Type
+| colspan="5" style="text-align: center;" | Bayonet
+|-
+| style="text-align: right; font-weight: bold;" | Compatible Lenses
+| Nikkor FX
+| Nikkor DX
+| EF
+| EF-S (optionally)
+| 
+|-
+| style="text-align: right; font-weight: bold;" | Image Circle Size
+| Full Frame<br />ø 43.3 mm
+| DX<br />ø 28.4 mm
+| Full Frame<br />ø 43.3 mm
+| Canon APS-C<br />ø 27.3 mm
+| "Half Frame"<br />ø 21.6 mm
+|-
+| style="text-align: right; font-weight: bold;" | Throat
+| colspan="2" | 44 mm
+| colspan="2" | 54 mm
+| ~38 mm
+|-
+| style="text-align: right; font-weight: bold;" | Flange focal distance
+| colspan="2" | 46.5 mm
+| colspan="2" | 44 mm
+| 19.25 mm
+|-
+| style="text-align: right; font-weight: bold;" | Axiom Beta<br />Sensor Compatibility
+| colspan="4" style="text-align: center;" | 16mm<br />Four Thirds<br />Super35
+| style="text-align: center;" | 16mm<br />Four Thirds
+|}
+
+More Details: [[Lens Mounts]]
+
+
+----
+
+
+===Infra Red / Ultra Violet Cut Off Filter===
+
+[[File:Electromagnetic-Spectrum-BLACK.png | thumb | 600px]]
+
+Image sensors are typically sensitive to a wider spectrum than the human eye. So we use an Infrared (IR) / Ultraviolet (UV) cut off filter that acts as an optical bandpass. These filters work with a reflective coating that cuts below 390nm and above 750nm.
+
+We recommend this filter brand: https://www.amazon.de/Haida-Digital-Slim-Filter-inkl/dp/B00CGGZ786
+
+With the AXIOM Beta developer kits we use this filter "externally" - screwed to the lens thread. With very wide angle lenses (< 16mm focal length) this can lead to visible color shift vignetting. 
+
+Ultimately the goal is to incorporate a UV/IR cut off filter into the camera body on top of the image sensor.
+
+Proposal: Buy 100x100mm filter from http://www.uqgoptics.com/catalogue/Filters/IR_CUT_OFF_FILTERS.aspx?subCatOrCatName=ir_cut_off_filters and cut into 3x3 pieces
+
+
+----
+
+
+[[Category:CMV12000]]
